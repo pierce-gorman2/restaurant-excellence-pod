@@ -3,7 +3,7 @@
 This is a lightweight starter website for **Restaurant Excellence**, currently scoped as a **podcast hosting platform** for:
 
 - DHC of Kansas
-- DHC of San Antonio yes
+- DHC of San Antonio
 - DHC of Nashville
 
 ## What this includes
