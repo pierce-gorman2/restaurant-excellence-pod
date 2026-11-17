@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logo Export</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 24px; font-family: sans-serif; }
+    canvas { border-radius: 16px; width: 400px; height: 400px; }
+    button { padding: 14px 36px; background: #7C3AED; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.06em; }
+    button:hover { background: #6B21A8; }
+    p { color: #888; font-size: 0.85rem; margin: 0; }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="3000" height="3000"></canvas>
+  <button onclick="download()">Download 3000×3000 PNG</button>
+  <p>Preview above is scaled down — exported file is full resolution.</p>
+
+  <script>
+    const SIZE = 3000;
+    const c = document.getElementById('c');
+    const ctx = c.getContext('2d');
+
+    function draw() {
+      // Solid background — full canvas, no transparency
+      ctx.fillStyle = '#0d0b14';
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      // Purple glow
+      const glow = ctx.createRadialGradient(SIZE/2, 500, 0, SIZE/2, 500, 1000);
+      glow.addColorStop(0, 'rgba(124,58,237,0.20)');
+      glow.addColorStop(1, 'rgba(124,58,237,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      const cx = SIZE / 2;
+
+      // RESTAURANT
+      ctx.font = '700 230px "Times New Roman", Times, serif';
+      ctx.fillStyle = '#f7f4ff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText('RESTAURANT', cx, 1220);
+
+      // Excellence — fill then stroke for crispness
+      ctx.font = 'italic 700 490px "Cormorant Garamond", Georgia, serif';
+      ctx.fillStyle = '#a855f7';
+      ctx.fillText('Excellence', cx, 1740);
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.strokeText('Excellence', cx, 1740);
+
+      // Arrow
+      const arrowY = 1830;
+      const arrowW = 1650;
+      const arrowLeft = cx - arrowW / 2;
+      const arrowRight = cx + arrowW / 2;
+      const headSize = 44;
+
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(arrowLeft, arrowY);
+      ctx.lineTo(arrowRight - headSize * 0.9, arrowY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(arrowRight - headSize, arrowY - headSize);
+      ctx.lineTo(arrowRight, arrowY);
+      ctx.lineTo(arrowRight - headSize, arrowY + headSize);
+      ctx.stroke();
+    }
+
+    function download() {
+      const link = document.createElement('a');
+      link.download = 'restaurant-excellence-logo.jpg';
+      link.href = c.toDataURL('image/jpeg', 1.0);
+      link.click();
+    }
+
+    document.fonts.ready.then(() => {
+      // Small delay to ensure Cormorant is fully available to canvas
+      setTimeout(draw, 200);
+    });
+  </script>
+</body>
+</html>

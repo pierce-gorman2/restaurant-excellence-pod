@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Restaurant Excellence</title>
+  <meta name="description" content="About Restaurant Excellence — built by operators, for operators.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=DM+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple:       #6B21A8;
+      --purple-mid:   #7C3AED;
+      --purple-light: #A855F7;
+      --bg:           #080808;
+      --bg-card:      #111111;
+      --text:         #F1F0EE;
+      --text-muted:   rgba(255,255,255,0.55);
+      --text-dim:     rgba(255,255,255,0.28);
+      --border:       rgba(255,255,255,0.07);
+      --border-purple: rgba(168,85,247,0.25);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; height: 64px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(8,8,8,0.92); backdrop-filter: blur(16px); z-index: 100; }
+    .nav-logo { display: inline-flex; align-items: center; }
+    .brand-text { display: inline-flex; align-items: baseline; gap: 0.4rem; }
+    .brand-restaurant { font-family: 'DM Sans', system-ui, sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.01em; color: var(--text); }
+    .brand-excellence-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; }
+    .brand-excellence { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-style: italic; font-weight: 700; line-height: 0.9; color: var(--purple-light); }
+    .brand-arrow { position: relative; width: 100%; min-width: 80px; height: 9px; }
+    .brand-arrow::before { content: ''; position: absolute; top: 50%; left: 0; right: 0.22rem; border-top: 1.5px solid var(--purple-light); transform: translateY(-50%); }
+    .brand-arrow::after { content: ''; position: absolute; top: 50%; right: 0; width: 0.38rem; height: 0.38rem; border-top: 1.5px solid var(--purple-light); border-right: 1.5px solid var(--purple-light); transform: translateY(-50%) rotate(45deg); }
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-link { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); padding: 0.4rem 0.9rem; border-radius: 4px; transition: color 0.2s, background 0.2s; }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-link.active { color: var(--text); }
+    .nav-audit { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purple-light); padding: 0.4rem 1rem; border: 1px solid var(--border-purple); border-radius: 4px; transition: background 0.2s, border-color 0.2s; margin-left: 0.5rem; }
+    .nav-audit:hover { background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.5); }
+
+    /* ── PAGE ── */
+    .page { flex: 1; max-width: 860px; margin: 0 auto; padding: 4rem 2.5rem 5rem; width: 100%; }
+    .page-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 1rem; }
+
+    .page-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-style: italic; font-weight: 900; color: var(--text); line-height: 0.95; margin-bottom: 2.5rem; }
+
+    .about-layout { display: grid; grid-template-columns: 280px 1fr; gap: 3rem; align-items: start; }
+    @media (max-width: 680px) { .about-layout { grid-template-columns: 1fr; } }
+
+    /* Photo placeholder */
+    .photo-placeholder { aspect-ratio: 3/4; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; position: relative; overflow: hidden; }
+    .photo-placeholder::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(107,33,168,0.12) 0%, transparent 65%); }
+    .photo-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(168,85,247,0.1); border: 1px solid var(--border-purple); display: flex; align-items: center; justify-content: center; }
+    .photo-icon svg { width: 28px; height: 28px; stroke: var(--purple-light); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .photo-label { font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.08em; position: relative; z-index: 1; }
+
+    /* Bio */
+    .bio-content h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-style: italic; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+    .bio-content .bio-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 1.5rem; }
+    .bio-block { font-size: 0.95rem; color: var(--text-muted); line-height: 1.78; margin-bottom: 1rem; }
+    .bio-placeholder { background: var(--bg-card); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 1.25rem 1.5rem; margin-top: 0.5rem; }
+    .bio-placeholder p { font-size: 0.82rem; color: var(--text-dim); font-style: italic; line-height: 1.65; }
+
+    /* ── FOOTER ── */
+    footer { padding: 1.75rem 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+    .foot-links { display: flex; gap: 1.5rem; }
+    .foot-links a { font-size: 0.78rem; color: var(--text-dim); transition: color 0.2s; }
+    .foot-links a:hover { color: var(--text-muted); }
+    .foot-copy { font-size: 0.75rem; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="brand-text">
+        <span class="brand-restaurant">Restaurant</span>
+        <span class="brand-excellence-wrap">
+          <span class="brand-excellence">Excellence</span>
+          <span class="brand-arrow"></span>
+        </span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="podcast.html" class="nav-link">Podcast</a>
+      <a href="about.html" class="nav-link active">About</a>
+      <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener" class="nav-link">Blog</a>
+      <a href="https://audit.restaurantexcellence.com" class="nav-audit">Free Audit</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-eyebrow">The person behind it</div>
+    <h1 class="page-title">About</h1>
+
+    <div class="about-layout">
+      <div class="photo-placeholder">
+        <div class="photo-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span class="photo-label">Photo — add yours here</span>
+      </div>
+
+      <div class="bio-content">
+        <h2>Your Name Here</h2>
+        <div class="bio-title">Founder, Restaurant Excellence</div>
+
+        <div class="bio-placeholder">
+          <p>This is your bio placeholder. Replace this section with your own story — your background in the restaurant industry, what drove you to build Restaurant Excellence, and what you believe about what it takes to run a great operation.</p>
+          <p style="margin-top: 0.75rem;">A few paragraphs is perfect. Keep it honest and operator-first.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="brand-text" style="opacity:0.4;">
+      <span class="brand-restaurant">Restaurant</span>
+      <span class="brand-excellence-wrap">
+        <span class="brand-excellence">Excellence</span>
+        <span class="brand-arrow"></span>
+      </span>
+    </div>
+    <div class="foot-links">
+      <a href="podcast.html">Podcast</a>
+      <a href="about.html">About</a>
+      <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener">Blog</a>
+    </div>
+    <span class="foot-copy">© 2026 Restaurant Excellence</span>
+  </footer>
+
+</body>
+</html>

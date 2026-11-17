@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Excellence</title>
+  <meta name="description" content="Helping restaurant operators operate their restaurants with excellence.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=DM+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple:       #6B21A8;
+      --purple-mid:   #7C3AED;
+      --purple-light: #A855F7;
+      --bg:           #080808;
+      --bg-card:      #111111;
+      --text:         #F1F0EE;
+      --text-muted:   rgba(255,255,255,0.55);
+      --text-dim:     rgba(255,255,255,0.28);
+      --border:       rgba(255,255,255,0.07);
+      --border-purple: rgba(168,85,247,0.25);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; height: 64px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(8,8,8,0.92); backdrop-filter: blur(16px); z-index: 100; }
+    .nav-logo { display: inline-flex; align-items: center; }
+    .brand-text { display: inline-flex; align-items: baseline; gap: 0.4rem; }
+    .brand-restaurant { font-family: 'DM Sans', system-ui, sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.01em; color: var(--text); }
+    .brand-excellence-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; }
+    .brand-excellence { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-style: italic; font-weight: 700; line-height: 0.9; color: var(--purple-light); }
+    .brand-arrow { position: relative; width: 100%; min-width: 80px; height: 9px; }
+    .brand-arrow::before { content: ''; position: absolute; top: 50%; left: 0; right: 0.22rem; border-top: 1.5px solid var(--purple-light); transform: translateY(-50%); }
+    .brand-arrow::after { content: ''; position: absolute; top: 50%; right: 0; width: 0.38rem; height: 0.38rem; border-top: 1.5px solid var(--purple-light); border-right: 1.5px solid var(--purple-light); transform: translateY(-50%) rotate(45deg); }
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-link { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); padding: 0.4rem 0.9rem; border-radius: 4px; transition: color 0.2s, background 0.2s; }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-link.active { color: var(--text); }
+    .nav-audit { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purple-light); padding: 0.4rem 1rem; border: 1px solid var(--border-purple); border-radius: 4px; transition: background 0.2s, border-color 0.2s; margin-left: 0.5rem; }
+    .nav-audit:hover { background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.5); }
+
+    /* ── HERO WORDMARK ── */
+    .hero { padding: 5rem 2rem 3.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(107,33,168,0.18) 0%, transparent 68%); pointer-events: none; }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.35) 70%, transparent 100%); }
+    .hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+
+    .wordmark { display: inline-flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 2.25rem; }
+    .wordmark-top { font-family: 'DM Sans', system-ui, sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); line-height: 1; }
+    .wordmark-excellence-wrap { display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
+    .wordmark-excellence { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(3rem, 7vw, 5.5rem); font-style: italic; font-weight: 900; line-height: 0.88; color: var(--purple-light); letter-spacing: -0.01em; }
+    .wordmark-arrow { position: relative; width: 100%; height: 16px; margin-top: 6px; }
+    .wordmark-arrow::before { content: ''; position: absolute; top: 50%; left: 0; right: 0.5rem; border-top: 2px solid var(--purple-light); transform: translateY(-50%); }
+    .wordmark-arrow::after { content: ''; position: absolute; top: 50%; right: 0; width: 0.55rem; height: 0.55rem; border-top: 2px solid var(--purple-light); border-right: 2px solid var(--purple-light); transform: translateY(-50%) rotate(45deg); }
+
+    .hero-tagline { font-size: clamp(1rem, 1.8vw, 1.2rem); color: var(--text-muted); line-height: 1.65; max-width: 480px; }
+
+    /* ── RECENT CONTENT ── */
+    .recent { flex: 1; padding: 4rem 2.5rem 5rem; max-width: 1000px; margin: 0 auto; width: 100%; }
+    .recent-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; padding-bottom: 0.875rem; border-bottom: 1px solid var(--border); }
+    .recent-header h2 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+    .recent-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 680px) { .recent-cols { grid-template-columns: 1fr; } }
+
+    .content-col-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .content-col-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .content-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.4rem; margin-bottom: 1rem; display: block; transition: border-color 0.2s, background 0.2s; }
+    .content-card:last-child { margin-bottom: 0; }
+    .content-card:hover { border-color: var(--border-purple); background: #161616; }
+    .content-card-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.5rem; }
+    .content-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+    .content-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+    .content-card-meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 0.75rem; }
+
+    .placeholder-note { font-size: 0.72rem; color: var(--text-dim); font-style: italic; padding: 1.5rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; text-align: center; line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer { padding: 1.75rem 2.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+    .foot-links { display: flex; gap: 1.5rem; }
+    .foot-links a { font-size: 0.78rem; color: var(--text-dim); transition: color 0.2s; }
+    .foot-links a:hover { color: var(--text-muted); }
+    .foot-copy { font-size: 0.75rem; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="brand-text">
+        <span class="brand-restaurant">Restaurant</span>
+        <span class="brand-excellence-wrap">
+          <span class="brand-excellence">Excellence</span>
+          <span class="brand-arrow"></span>
+        </span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="podcast.html" class="nav-link">Podcast</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener" class="nav-link">Blog</a>
+      <a href="https://audit.restaurantexcellence.com" class="nav-audit">Free Audit</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div class="wordmark">
+        <span class="wordmark-top">Restaurant</span>
+        <div class="wordmark-excellence-wrap">
+          <span class="wordmark-excellence">Excellence</span>
+          <div class="wordmark-arrow"></div>
+        </div>
+      </div>
+      <p class="hero-tagline">Helping restaurant operators operate their restaurants with excellence.</p>
+    </div>
+  </section>
+
+  <div class="recent">
+    <div class="recent-header">
+      <h2>Recent content</h2>
+    </div>
+    <div class="recent-cols">
+
+      <div>
+        <div class="content-col-label">From the blog</div>
+        <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener" class="content-card">
+          <div class="content-card-tag">Operations</div>
+          <h3>The SOP That Actually Gets Followed</h3>
+          <p>Most SOPs sit in a binder. Here's how to build one your team uses every shift.</p>
+          <div class="content-card-meta">Substack — swap with real post link</div>
+        </a>
+        <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener" class="content-card">
+          <div class="content-card-tag">Unit Economics</div>
+          <h3>Prime Cost: The Only Number That Matters</h3>
+          <p>Food cost and labor cost individually are noise. Together they tell you everything.</p>
+          <div class="content-card-meta">Substack — swap with real post link</div>
+        </a>
+        <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener" class="content-card">
+          <div class="content-card-tag">Leadership</div>
+          <h3>How to Hold Accountability Without Losing Your Team</h3>
+          <p>The best operators aren't the toughest — they're the clearest.</p>
+          <div class="content-card-meta">Substack — swap with real post link</div>
+        </a>
+      </div>
+
+      <div>
+        <div class="content-col-label">Podcast</div>
+        <div class="placeholder-note">
+          Podcast episodes will appear here once the Restaurant Excellence Podcast launches.<br><br>
+          <a href="podcast.html" style="color: var(--purple-light);">Learn more about the podcast →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="brand-text" style="opacity:0.4;">
+      <span class="brand-restaurant">Restaurant</span>
+      <span class="brand-excellence-wrap">
+        <span class="brand-excellence">Excellence</span>
+        <span class="brand-arrow"></span>
+      </span>
+    </div>
+    <div class="foot-links">
+      <a href="podcast.html">Podcast</a>
+      <a href="about.html">About</a>
+      <a href="https://restaurantexcellence.substack.com" target="_blank" rel="noopener">Blog</a>
+    </div>
+    <span class="foot-copy">© 2026 Restaurant Excellence</span>
+  </footer>
+
+</body>
+</html>

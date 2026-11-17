@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Excellence Audit — Restaurant Excellence</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --black:#080808; --black-2:#111111; --black-3:#1A1A1A; --black-4:#222222;
+            --purple-deep:#4C1D95; --purple-mid:#6B21A8; --purple-bright:#7C3AED; --purple-light:#A855F7;
+            --purple-glow:rgba(124,58,237,.14);
+            --gold:#C9A84C; --gold-light:#E8C97E; --gold-dim:rgba(201,168,76,.18);
+            --white:#FFFFFF; --white-dim:rgba(255,255,255,.68); --white-faint:rgba(255,255,255,.07);
+            --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        html { scroll-behavior:smooth; font-size:16px; }
+        body { font-family:'DM Sans',system-ui,sans-serif; background:var(--black); color:#fff; -webkit-font-smoothing:antialiased; overflow-x:hidden; min-height:100vh; }
+        body::after { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-size:200px; pointer-events:none; z-index:9999; opacity:.4; }
+        a { text-decoration:none; color:inherit; }
+        .wrap { width:min(1100px,100% - 48px); margin-inline:auto; }
+
+        /* Topbar */
+        .topbar { position:fixed; top:0; left:0; right:0; z-index:200; padding:16px 0; background:rgba(8,8,8,.92); backdrop-filter:blur(18px); border-bottom:1px solid rgba(255,255,255,.06); }
+        .topbar-inner { display:flex; align-items:center; justify-content:space-between; }
+        .topbar-logo { display:inline-flex; align-items:center; text-decoration:none; }
+        .topbar-logo .brand-text { display:inline-flex; align-items:baseline; gap:0.45rem; }
+        .topbar-logo .brand-restaurant { font-family:'DM Sans',system-ui,sans-serif; font-size:clamp(1.1rem,2vw,1.35rem); font-weight:800; letter-spacing:0.01em; color:#f7f4ff; }
+        .topbar-logo .brand-excellence-wrap { display:inline-flex; flex-direction:column; align-items:flex-start; }
+        .topbar-logo .brand-excellence { font-family:'Playfair Display',serif; font-size:clamp(1.2rem,2.2vw,1.55rem); font-style:italic; font-weight:700; line-height:0.9; color:var(--purple-light); }
+        .topbar-logo .brand-arrow { position:relative; width:100%; min-width:90px; height:10px; }
+        .topbar-logo .brand-arrow::before { content:''; position:absolute; top:50%; left:0; right:0.22rem; border-top:1.5px solid var(--purple-light); transform:translateY(-50%); }
+        .topbar-logo .brand-arrow::after { content:''; position:absolute; top:50%; right:0; width:0.42rem; height:0.42rem; border-top:1.5px solid var(--purple-light); border-right:1.5px solid var(--purple-light); transform:translateY(-50%) rotate(45deg); }
+        .topbar-back { display:inline-flex; align-items:center; gap:7px; font-size:.73rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--white-dim); transition:color .2s; }
+        .topbar-back:hover { color:#fff; }
+
+        /* Hero */
+        .hero-band { padding:140px 0 72px; text-align:center; position:relative; overflow:hidden; }
+        .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(107,33,168,.26) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 15% 90%,rgba(76,29,149,.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 85% 90%,rgba(76,29,149,.12) 0%,transparent 60%); }
+        .hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px); background-size:54px 54px; mask-image:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.18) 75%,transparent 100%); }
+        .hero-inner { position:relative; z-index:2; }
+        .hero-band h1 { font-family:'Playfair Display',serif; font-size:clamp(2.6rem,5.5vw,5rem); font-weight:700; line-height:1.04; letter-spacing:-.02em; margin-bottom:22px; }
+        .gradient-word { background:linear-gradient(130deg,var(--purple-light) 20%,#C084FC 80%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .gold-line { display:block; width:44px; height:2px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); margin:0 auto 24px; }
+        .hero-sub { font-size:clamp(.95rem,1.4vw,1.08rem); color:var(--white-dim); line-height:1.75; max-width:540px; margin:0 auto; }
+
+        /* Audit Stage */
+        .audit-stage { padding:0 0 80px; }
+        .step-pills { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:52px; flex-wrap:wrap; }
+        .step-pill { display:flex; align-items:center; gap:10px; padding:10px 20px; font-size:.72rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+        .step-pill .pill-num { width:22px; height:22px; border-radius:50%; border:1px solid rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; }
+        .step-pill.active { color:var(--purple-light); }
+        .step-pill.active .pill-num { background:var(--purple-mid); border-color:var(--purple-mid); color:#fff; }
+        .step-pill.done { color:rgba(255,255,255,.5); }
+        .step-pill.done .pill-num { background:var(--purple-deep); border-color:var(--purple-deep); color:#fff; }
+        .step-connector { width:32px; height:1px; background:rgba(255,255,255,.1); }
+
+        /* Audit Card */
+        .audit-card { background:#0d0d14; border:1px solid rgba(124,58,237,.22); border-radius:20px; overflow:hidden; max-width:820px; margin:0 auto; box-shadow:0 0 0 1px rgba(0,0,0,.3),0 32px 80px rgba(0,0,0,.5),0 0 60px rgba(107,33,168,.1); }
+        .card-header { background:linear-gradient(135deg,#120820,#0e0618); padding:32px 44px 28px; border-bottom:1px solid rgba(124,58,237,.18); display:flex; align-items:center; justify-content:space-between; gap:20px; }
+        .card-eyebrow { font-family:'Cormorant Garamond',serif; font-size:11px; font-weight:600; letter-spacing:3.5px; text-transform:uppercase; color:#9f7aea; margin-bottom:6px; }
+        .card-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:#f5f0ff; line-height:1.15; }
+        .card-subtitle { font-size:12px; color:#7c6d8a; margin-top:5px; font-weight:300; }
+        .card-header-badge { background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.2); border-radius:99px; padding:6px 16px; font-size:.68rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--purple-light); white-space:nowrap; flex-shrink:0; }
+        .prog-bar-wrap { padding:20px 44px; background:linear-gradient(135deg,#120820,#0e0618); border-bottom:1px solid rgba(124,58,237,.12); }
+        .prog-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+        .prog-seg { height:3px; flex:1; border-radius:2px; background:#1e0f35; transition:background .35s; }
+        .prog-seg.active { background:#7c3aed; }
+        .prog-seg.done { background:#4c1d95; }
+        .prog-meta { display:flex; align-items:center; justify-content:space-between; }
+        .prog-label-text { font-size:11px; color:#6b5880; font-weight:300; }
+        .prog-pct { font-size:11px; color:#9f7aea; font-weight:500; }
+        .card-body { padding:40px 44px 44px; }
+
+        /* Category Selector */
+        .cat-prompt { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:#f0eafa; line-height:1.35; margin-bottom:6px; }
+        .cat-prompt-sub { font-size:13px; color:#7c6d8a; margin-bottom:28px; line-height:1.6; }
+        .cat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:4px; }
+        .cat-card { background:#12081f; border:1px solid #2d1a4a; border-radius:12px; padding:22px 16px 18px; cursor:pointer; transition:all .2s; text-align:center; }
+        .cat-card:hover { border-color:#7c3aed; background:#1a0a2e; transform:translateY(-2px); box-shadow:0 8px 24px rgba(124,58,237,.2); }
+        .cat-icon { width:46px; height:46px; border-radius:11px; background:rgba(124,58,237,.12); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; color:#9f7aea; transition:background .2s; }
+        .cat-card:hover .cat-icon { background:rgba(124,58,237,.22); }
+        .cat-label { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:#f5f0ff; margin-bottom:5px; }
+        .cat-desc { font-size:11.5px; color:#6b5880; line-height:1.5; }
+
+        /* Restaurant Type Selector */
+        .rtype-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+        .rtype-card { background:#12081f; border:1px solid #2d1a4a; border-radius:12px; padding:18px 10px 14px; cursor:pointer; transition:all .2s; text-align:center; }
+        .rtype-card:hover { border-color:#7c3aed; background:#1a0a2e; transform:translateY(-2px); box-shadow:0 8px 24px rgba(124,58,237,.2); }
+        .rtype-card:hover .cat-icon { background:rgba(124,58,237,.22); }
+        .back-type-link { font-size:12px; color:#4a3860; background:none; border:none; cursor:pointer; padding:0; transition:color .2s; display:inline-flex; align-items:center; gap:5px; margin-bottom:18px; }
+        .back-type-link:hover { color:#9f7aea; }
+
+        /* Arc Gauge */
+        .gauge-wrap { position:relative; margin-bottom:16px; text-align:center; }
+        .gauge-zones { display:flex; justify-content:center; gap:22px; margin-top:2px; flex-wrap:wrap; }
+        .gz { font-size:11px; font-weight:500; display:inline-flex; align-items:center; gap:5px; }
+        .gz-red { color:rgba(239,68,68,.75); }
+        .gz-yellow { color:rgba(245,158,11,.75); }
+        .gz-green { color:rgba(34,197,94,.75); }
+        .gz small { font-size:10px; opacity:.65; }
+
+        /* Question */
+        .q-block { animation:fadeslide .3s ease; }
+        @keyframes fadeslide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .q-text { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:#f0eafa; line-height:1.4; margin-bottom:22px; }
+        .opts-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+        .opt-btn { background:#12081f; border:1px solid #2d1a4a; border-radius:10px; padding:13px 16px; font-family:'DM Sans',sans-serif; font-size:13px; color:#c4b5d9; cursor:pointer; transition:all .15s; font-weight:400; text-align:left; line-height:1.4; }
+        .opt-btn:hover { border-color:#7c3aed; color:#e8dff5; background:#1a0a2e; }
+        .opt-btn.sel { border-color:#7c3aed; background:#1a0a2e; color:#f5f0ff; box-shadow:inset 0 0 0 1px rgba(124,58,237,.3); }
+        .or-divider { display:flex; align-items:center; gap:12px; font-size:10px; color:#3d2a55; letter-spacing:2px; text-transform:uppercase; margin:18px 0 14px; }
+        .or-divider::before,.or-divider::after { content:''; flex:1; height:1px; background:#1e0f35; }
+        .q-textarea { width:100%; background:#12081f; border:1px solid #2d1a4a; border-radius:10px; padding:14px 16px; color:#e8dff5; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; line-height:1.65; resize:none; height:90px; outline:none; transition:border-color .2s,box-shadow .2s; }
+        .q-textarea:focus { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.1); }
+        .q-textarea::placeholder { color:#4a3860; }
+        .q-textarea.text-only { height:56px; }
+        .nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:24px; }
+        .btn-back-card { background:none; border:none; color:#6b5880; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; padding:0; transition:color .2s; }
+        .btn-back-card:hover { color:#9f7aea; }
+        .btn-next-card { background:linear-gradient(135deg,#6b21a8,#7c3aed); color:#f5f0ff; border:none; border-radius:10px; padding:13px 30px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; letter-spacing:.03em; box-shadow:0 4px 18px rgba(124,58,237,.35); }
+        .btn-next-card:hover { box-shadow:0 8px 28px rgba(124,58,237,.55); transform:translateY(-1px); }
+
+        /* Google Snapshot Card */
+        .snap-card { background:linear-gradient(135deg,#0a1628,#0e1f3c); border:1px solid rgba(66,133,244,.28); border-radius:14px; padding:20px 22px; margin-bottom:24px; animation:fadeslide .4s ease; }
+        .snap-hdr { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+        .snap-g-logo { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#4285F4,#34A853,#FBBC04,#EA4335); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:#fff; flex-shrink:0; letter-spacing:-1px; }
+        .snap-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:700; color:#f5f0ff; }
+        .snap-addr { font-size:11px; color:#6b7280; margin-top:2px; }
+        .snap-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .snap-stat { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:9px; padding:12px 14px; }
+        .snap-stat-val { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:700; line-height:1; margin-bottom:3px; }
+        .snap-stat-lbl { font-size:10.5px; color:#6b7280; font-weight:400; line-height:1.4; }
+        .snap-stat-sub { font-size:10px; margin-top:4px; font-weight:500; }
+        .snap-pill { display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:4px; }
+        .sp-good { background:rgba(34,197,94,.1);  color:#22c55e; border:1px solid rgba(34,197,94,.2);  }
+        .sp-warn { background:rgba(245,158,11,.1); color:#f59e0b; border:1px solid rgba(245,158,11,.2); }
+        .sp-bad  { background:rgba(239,68,68,.1);  color:#ef4444; border:1px solid rgba(239,68,68,.2);  }
+        .snap-community { margin-top:12px; border-top:1px solid rgba(255,255,255,.06); padding-top:12px; }
+        .snap-comm-lbl { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#6b5880; margin-bottom:8px; }
+        .snap-comm-item { display:flex; align-items:flex-start; gap:8px; font-size:11px; color:#9f8aae; margin-bottom:5px; line-height:1.5; }
+        .snap-comm-dot { width:5px; height:5px; border-radius:50%; background:#7c3aed; flex-shrink:0; margin-top:4px; }
+        .snap-not-found { background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.18); border-radius:10px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:flex-start; gap:10px; font-size:13px; color:#f87171; line-height:1.6; animation:fadeslide .4s ease; }
+        .snap-loading { display:flex; align-items:center; gap:10px; font-size:12px; color:#6b5880; padding:10px 0 4px; animation:fadeslide .3s ease; }
+        .snap-spinner { width:14px; height:14px; border:2px solid #2d1a4a; border-top-color:#7c3aed; border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        /* Loading */
+        .re-load { text-align:center; padding:48px 0 56px; display:none; }
+        .re-dots span { display:inline-block; width:8px; height:8px; background:#7c3aed; border-radius:50%; margin:0 4px; animation:rpulse 1.2s ease-in-out infinite; }
+        .re-dots span:nth-child(2) { animation-delay:.2s; }
+        .re-dots span:nth-child(3) { animation-delay:.4s; }
+        @keyframes rpulse { 0%,80%,100%{opacity:.2;transform:scale(.8)} 40%{opacity:1;transform:scale(1)} }
+        .load-label { margin-top:14px; color:#c4b5d9; font-size:14px; font-weight:500; }
+        .load-sublabel { margin-top:5px; color:#5a4870; font-size:12px; }
+        .load-phases { margin-top:28px; display:flex; flex-direction:column; gap:8px; max-width:320px; margin-inline:auto; text-align:left; }
+        .lp-item { display:flex; align-items:center; gap:10px; font-size:12px; color:#3d2a55; padding:8px 12px; border-radius:8px; transition:all .4s ease; }
+        .lp-item .lp-dot { width:6px; height:6px; border-radius:50%; background:#2d1a4a; flex-shrink:0; transition:background .4s; }
+        .lp-item.active { color:#9f7aea; background:rgba(124,58,237,.07); }
+        .lp-item.active .lp-dot { background:#7c3aed; box-shadow:0 0 6px rgba(124,58,237,.5); }
+        .lp-item.done { color:#6b5880; }
+        .lp-item.done .lp-dot { background:#4c1d95; }
+
+        /* Score gauge */
+        .score-section { margin-bottom:28px; }
+        .score-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:10px; }
+        .score-label { font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#7c3aed; }
+        .score-value { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:700; line-height:1; }
+        .score-value span { font-size:1rem; color:#6b5880; font-family:'DM Sans',sans-serif; font-weight:300; }
+        .gauge-track { height:10px; background:#1e0f35; border-radius:99px; position:relative; overflow:visible; margin-bottom:10px; }
+        .gauge-fill { height:100%; border-radius:99px; transition:width 1.2s cubic-bezier(.25,.46,.45,.94); position:relative; }
+        .gauge-fill::after { content:''; position:absolute; right:-1px; top:50%; transform:translateY(-50%); width:16px; height:16px; border-radius:50%; background:inherit; border:3px solid #0d0d14; box-shadow:0 0 8px rgba(124,58,237,.6); }
+        .gauge-markers { display:flex; justify-content:space-between; font-size:10px; color:#3d2a55; }
+        .gauge-bench { display:flex; gap:18px; margin-top:8px; flex-wrap:wrap; }
+        .gauge-bench-item { display:flex; align-items:center; gap:6px; font-size:11px; color:#6b5880; }
+        .gauge-bench-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+        /* Benchmark stat cards */
+        .data-points { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:28px; }
+        .dp-card { background:#12081f; border:1px solid #2d1a4a; border-radius:10px; padding:14px 16px; }
+        .dp-num { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:700; color:#a855f7; line-height:1; margin-bottom:4px; }
+        .dp-label { font-size:11.5px; color:#9f8aae; line-height:1.55; font-weight:300; margin-bottom:6px; }
+        .dp-source { font-size:10px; color:#3d2a55; font-weight:500; letter-spacing:.04em; }
+        .dp-bar-track { height:3px; background:#1e0f35; border-radius:2px; margin-top:8px; }
+        .dp-bar-fill { height:3px; border-radius:2px; background:linear-gradient(90deg,#4c1d95,#7c3aed); transition:width 1s ease .3s; }
+
+        /* Results */
+        .re-result { display:none; animation:fadeslide .5s ease; }
+        .result-section-label { font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#7c3aed; margin-bottom:10px; }
+        .result-reframe { background:linear-gradient(135deg,#12081f,#0e0618); border-left:3px solid #7c3aed; border-radius:0 10px 10px 0; padding:18px 20px; font-size:14px; color:#d4c8ed; line-height:1.85; font-weight:300; margin-bottom:14px; }
+        .root-causes { margin-bottom:28px; }
+        .rc-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; font-size:13px; color:#9f8aae; line-height:1.6; }
+        .rc-bullet { color:#7c3aed; flex-shrink:0; margin-top:1px; }
+        .result-divider { height:1px; background:#1e0f35; margin:24px 0; }
+        .result-steps { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+        .rstep { display:flex; gap:14px; align-items:flex-start; background:#12081f; border:1px solid #2d1a4a; border-radius:12px; padding:16px 18px; }
+        .rsn { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:#7c3aed; line-height:1; min-width:20px; padding-top:1px; }
+        .rst { font-size:13px; font-weight:600; color:#e8dff5; margin-bottom:4px; }
+        .rsb { font-size:13px; color:#9f8aae; line-height:1.72; font-weight:300; }
+        .step-priority { display:inline-block; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:3px 8px; border-radius:4px; margin-bottom:5px; }
+        .sp-high  { background:rgba(239,68,68,.12); color:#f87171; border:1px solid rgba(239,68,68,.2); }
+        .sp-med   { background:rgba(251,146,60,.1); color:#fb923c; border:1px solid rgba(251,146,60,.2); }
+        .sp-build { background:rgba(124,58,237,.12); color:#a855f7; border:1px solid rgba(124,58,237,.2); }
+        .step-metric { font-size:11px; color:#7c3aed; margin-top:8px; padding:6px 10px; background:rgba(124,58,237,.07); border-radius:6px; }
+        .step-timeline { font-size:10px; color:#5a4870; margin-top:4px; }
+        .result-arc { background:linear-gradient(135deg,#120820,#0a0514); border:1px solid #3d1f6b; border-radius:12px; padding:20px 22px; margin-bottom:24px; }
+        .rarct { font-size:13px; color:#c4b5d9; line-height:1.8; font-weight:300; }
+        .rarctl { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:#9f7aea; margin-top:10px; font-style:italic; }
+
+        /* In-page Tracker */
+        .tracker-section { margin:24px 0; border:1px solid rgba(201,168,76,.22); border-radius:14px; overflow:hidden; animation:fadeslide .4s ease; }
+        .tracker-header { background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(201,168,76,.02)); padding:20px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; border-bottom:1px solid rgba(201,168,76,.12); }
+        .tracker-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:700; color:#f5f0ff; margin-bottom:3px; }
+        .tracker-subtitle { font-size:11px; color:#6b5880; font-weight:300; }
+        .tracker-progress-wrap { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+        .progress-ring { width:48px; height:48px; transform:rotate(-90deg); }
+        .pr-bg { fill:none; stroke:#1e0f35; stroke-width:4; }
+        .pr-fill { fill:none; stroke:#c9a84c; stroke-width:4; stroke-linecap:round; stroke-dasharray:113.1; stroke-dashoffset:113.1; transition:stroke-dashoffset .8s cubic-bezier(.25,.46,.45,.94); }
+        .progress-pct { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; color:var(--gold); min-width:36px; }
+        .tracker-tabs { display:flex; border-bottom:1px solid #1e0f35; background:#080510; }
+        .tracker-tab { flex:1; padding:12px 8px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:#4a3860; background:none; border:none; cursor:pointer; transition:all .2s; border-bottom:2px solid transparent; }
+        .tracker-tab.active { color:var(--gold); border-bottom-color:var(--gold); background:rgba(201,168,76,.04); }
+        .tracker-tab:hover:not(.active) { color:#7c6d8a; }
+        .tracker-panel { display:none; padding:24px; }
+        .tracker-panel.active { display:block; animation:fadeslide .25s ease; }
+        .tp-header { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #1e0f35; }
+        .tp-body { font-size:12.5px; color:#9f8aae; line-height:1.75; margin-top:8px; }
+        .tp-metric { display:flex; align-items:flex-start; gap:8px; font-size:11px; color:#7c3aed; margin-top:10px; padding:8px 10px; background:rgba(124,58,237,.06); border-radius:6px; }
+        .tracker-checklist { display:flex; flex-direction:column; gap:9px; margin:16px 0; }
+        .tcheck { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+        .tcheck input { width:16px; height:16px; accent-color:#c9a84c; cursor:pointer; flex-shrink:0; }
+        .tcheck span { font-size:13px; color:#c4b5d9; transition:color .2s; }
+        .tcheck input:checked + span { color:#4a3860; text-decoration:line-through; }
+        .tnotes-label { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#4a3860; margin-bottom:6px; }
+        .tnotes-ta { width:100%; background:#080510; border:1px solid #2d1a4a; border-radius:8px; padding:12px 14px; color:#d4c8ed; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.65; resize:vertical; min-height:72px; outline:none; transition:border-color .2s; }
+        .tnotes-ta:focus { border-color:#7c3aed; }
+        .tnotes-ta::placeholder { color:#3d2a55; }
+        .tdate-row { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+        .tdate-stamp { font-size:10px; color:#3d2a55; }
+        .tdate-stamp.active { color:#c9a84c; }
+        .tracker-actions { padding:16px 24px; border-top:1px solid #1e0f35; display:flex; gap:10px; align-items:center; background:#080510; }
+        .btn-dl-tracker { display:inline-flex; align-items:center; gap:7px; background:transparent; border:1px solid rgba(201,168,76,.3); border-radius:8px; padding:9px 18px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--gold); cursor:pointer; transition:all .2s; }
+        .btn-dl-tracker:hover { background:var(--gold-dim); color:var(--gold-light); }
+        .tracker-save-note { font-size:11px; color:#3d2a55; }
+
+        /* Dig Deeper */
+        .dig-deeper-wrap { margin:28px 0 8px; padding:24px; background:rgba(201,168,76,.05); border:1px solid rgba(201,168,76,.18); border-radius:12px; text-align:center; }
+        .dig-deeper-wrap p { font-size:13px; color:rgba(255,255,255,.5); line-height:1.6; margin-bottom:14px; }
+        .dig-deeper-wrap p strong { color:rgba(255,255,255,.8); font-weight:500; }
+        .btn-dig { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid var(--gold); color:var(--gold); border-radius:8px; padding:11px 24px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
+        .btn-dig:hover { background:var(--gold-dim); color:var(--gold-light); }
+
+        /* Deep quiz */
+        .re-deep-quiz { display:none; animation:fadeslide .4s ease; }
+        .deep-quiz-header { display:flex; align-items:center; gap:10px; margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid #1e0f35; }
+        .deep-badge { background:var(--gold-dim); border:1px solid rgba(201,168,76,.25); border-radius:99px; padding:5px 14px; font-size:.65rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); }
+        .deep-quiz-header p { font-size:12px; color:#6b5880; font-weight:300; }
+
+        /* Deep results */
+        .re-deep-result { display:none; animation:fadeslide .5s ease; }
+        .deep-result-header { background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.04)); border:1px solid rgba(201,168,76,.25); border-radius:12px; padding:20px 22px; margin-bottom:24px; display:flex; align-items:center; gap:14px; }
+        .deep-result-icon { width:44px; height:44px; min-width:44px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); display:flex; align-items:center; justify-content:center; color:var(--black); flex-shrink:0; }
+        .deep-result-header h4 { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:#f5f0ff; margin-bottom:3px; }
+        .deep-result-header p { font-size:11px; color:#7c6d8a; font-weight:300; }
+        .deep-reframe { background:linear-gradient(135deg,#12081f,#0e0618); border-left:3px solid var(--gold); border-radius:0 10px 10px 0; padding:18px 20px; font-size:14px; color:#d4c8ed; line-height:1.85; font-weight:300; margin-bottom:24px; }
+        .deep-step { display:flex; gap:14px; align-items:flex-start; background:#12081f; border:1px solid rgba(201,168,76,.15); border-radius:12px; padding:16px 18px; margin-bottom:10px; }
+        .deep-step .dsn { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--gold); line-height:1; min-width:20px; padding-top:1px; }
+        .deep-step .dst { font-size:13px; font-weight:600; color:#e8dff5; margin-bottom:4px; }
+        .deep-step .dsb { font-size:13px; color:#9f8aae; line-height:1.72; font-weight:300; }
+        .deep-arc { background:linear-gradient(135deg,#120c04,#0e0904); border:1px solid rgba(201,168,76,.2); border-radius:12px; padding:20px 22px; margin-bottom:24px; }
+        .deep-arc .darct { font-size:13px; color:#c4b5d9; line-height:1.8; font-weight:300; }
+        .deep-arc .darctl { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--gold); margin-top:10px; font-style:italic; }
+
+        /* Email gate */
+        .rgate { background:linear-gradient(135deg,#12081f,#0e0618); border:1px solid rgba(124,58,237,.3); border-radius:14px; padding:24px 26px; }
+        .rgt { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#f5f0ff; margin-bottom:4px; }
+        .rgs { font-size:12px; color:#7c6d8a; margin-bottom:16px; font-weight:300; line-height:1.5; }
+        .ri-row { display:flex; gap:10px; margin-bottom:10px; }
+        .ri { flex:1; background:#0a0a0f; border:1px solid #2d1a4a; border-radius:8px; padding:11px 14px; color:#e8dff5; font-family:'DM Sans',sans-serif; font-size:13px; outline:none; transition:border-color .2s; }
+        .ri:focus { border-color:#7c3aed; }
+        .ri::placeholder { color:#4a3860; }
+        .rdl { width:100%; background:transparent; border:1px solid #7c3aed; color:#9f7aea; border-radius:8px; padding:11px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
+        .rdl:hover { background:rgba(124,58,237,.13); color:#c4b5d9; }
+        .rsuc { display:none; text-align:center; padding:10px; font-size:13px; color:#9f7aea; font-weight:300; }
+        .rreset { background:none; border:none; color:#4a3860; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; margin-top:18px; text-decoration:underline; padding:0; display:block; transition:color .2s; }
+        .rreset:hover { color:#7c6d8a; }
+
+        /* Error banner */
+        .re-error { background:rgba(239,68,68,.07); border:1px solid rgba(239,68,68,.18); border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#f87171; line-height:1.65; }
+
+        /* Stats strip */
+        .stats-strip { background:var(--black-2); border-top:1px solid rgba(255,255,255,.05); border-bottom:1px solid rgba(255,255,255,.05); padding:52px 0; }
+        .stats-inner { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.05); border-radius:10px; overflow:hidden; }
+        .stat-item { background:var(--black-2); padding:32px 36px; text-align:center; }
+        .stat-num { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,3.5vw,3rem); font-weight:700; line-height:1; background:linear-gradient(135deg,var(--purple-light),#C084FC); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+        .stat-label { font-size:.8rem; color:var(--white-dim); line-height:1.55; max-width:200px; margin-inline:auto; }
+
+        /* Bottom CTA */
+        .bottom-cta { padding:100px 0; text-align:center; position:relative; overflow:hidden; }
+        .bottom-cta::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:700px; height:320px; background:radial-gradient(ellipse,rgba(107,33,168,.16) 0%,transparent 70%); pointer-events:none; }
+        .bottom-cta h2 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.8rem); font-weight:700; line-height:1.15; margin-bottom:16px; position:relative; z-index:1; }
+        .bottom-cta p { color:var(--white-dim); max-width:460px; margin:0 auto 34px; position:relative; z-index:1; font-size:.95rem; line-height:1.75; }
+        .btn-cta { display:inline-flex; align-items:center; gap:9px; padding:15px 34px; background:linear-gradient(135deg,var(--purple-mid),var(--purple-bright)); color:#fff; font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; border-radius:4px; box-shadow:0 4px 22px rgba(124,58,237,.38); transition:transform .25s var(--ease),box-shadow .25s var(--ease); position:relative; z-index:1; }
+        .btn-cta:hover { transform:translateY(-2px); box-shadow:0 10px 36px rgba(124,58,237,.55); }
+
+        /* Footer */
+        .page-footer { border-top:1px solid rgba(255,255,255,.06); padding:28px 0; background:var(--black); }
+        .footer-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+        .foot-logo { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; }
+        .foot-logo em { font-style:normal; color:var(--gold); }
+        .foot-copy { font-size:.74rem; color:rgba(255,255,255,.28); }
+        .foot-links { display:flex; gap:20px; }
+        .foot-links a { font-size:.74rem; color:rgba(255,255,255,.28); transition:color .2s; }
+        .foot-links a:hover { color:var(--white-dim); }
+
+        /* Responsive */
+        @media (max-width:680px) {
+            .card-header { padding:24px 24px 20px; flex-direction:column; align-items:flex-start; }
+            .card-body { padding:28px 24px 32px; }
+            .prog-bar-wrap { padding:16px 24px; }
+            .opts-grid { grid-template-columns:1fr; }
+            .data-points { grid-template-columns:1fr; }
+            .stats-inner { grid-template-columns:1fr; }
+            .ri-row { flex-direction:column; }
+            .footer-inner { flex-direction:column; text-align:center; }
+            .step-pills { display:none; }
+            .tracker-tabs .tracker-tab { font-size:10px; padding:10px 4px; }
+            .cat-grid { grid-template-columns:1fr 1fr; }
+            .rtype-grid { grid-template-columns:1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="wrap topbar-inner">
+        <a href="index.html" class="topbar-logo">
+          <div class="brand-text">
+            <span class="brand-restaurant">Restaurant</span>
+            <span class="brand-excellence-wrap">
+              <span class="brand-excellence">Excellence</span>
+              <span class="brand-arrow"></span>
+            </span>
+          </div>
+        </a>
+        <a href="index.html" class="topbar-back"><i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back to Main Site</a>
+    </div>
+</header>
+
+<section class="hero-band">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+        <h1>The Excellence<br><span class="gradient-word">Audit.</span></h1>
+        <span class="gold-line"></span>
+        <p class="hero-sub">Free. Five questions. 3–5 minutes. Get a scored action plan and downloadable tracker built for your restaurant.</p>
+    </div>
+</section>
+
+<section class="audit-stage">
+    <div class="wrap">
+        <div class="step-pills" id="stepPills" style="display:none;">
+            <div class="step-pill active" id="pill-0"><div class="pill-num">1</div> <span class="pill-lbl">Q1</span></div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pill-1"><div class="pill-num">2</div> <span class="pill-lbl">Q2</span></div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pill-2"><div class="pill-num">3</div> <span class="pill-lbl">Q3</span></div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pill-3"><div class="pill-num">4</div> <span class="pill-lbl">Q4</span></div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pill-4"><div class="pill-num">5</div> <span class="pill-lbl">Q5</span></div>
+        </div>
+
+        <div class="audit-card">
+            <div class="card-header">
+                <div>
+                    <div class="card-eyebrow">Restaurant Excellence</div>
+                    <div class="card-title" id="cardTitle">The Excellence Audit</div>
+                    <div class="card-subtitle">Free · 3–5 minutes · No commitment</div>
+                </div>
+                <div class="card-header-badge" id="cardBadge">Free · 3–5 min</div>
+            </div>
+
+            <div class="prog-bar-wrap" id="progWrap" style="display:none;">
+                <div class="prog-row">
+                    <div class="prog-seg active" id="ps0"></div>
+                    <div class="prog-seg" id="ps1"></div>
+                    <div class="prog-seg" id="ps2"></div>
+                    <div class="prog-seg" id="ps3"></div>
+                    <div class="prog-seg" id="ps4"></div>
+                </div>
+                <div class="prog-meta">
+                    <span class="prog-label-text" id="prog-lbl">Question 1 of 5</span>
+                    <span class="prog-pct" id="prog-pct">0% complete</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <!-- ── Restaurant Type Selector ── -->
+                <div id="re-rtype">
+                    <div class="cat-prompt">What type of restaurant do you operate?</div>
+                    <p class="cat-prompt-sub">Your concept shapes everything — scoring and benchmarks are calibrated to your specific model.</p>
+                    <div class="rtype-grid">
+                        <div class="rtype-card" onclick="selectRestaurantType('Full Service / Casual Dining')">
+                            <div class="cat-icon"><i data-lucide="utensils" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Full Service</div>
+                            <div class="cat-desc">Table service, casual or family dining</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Fine Dining')">
+                            <div class="cat-icon"><i data-lucide="wine" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Fine Dining</div>
+                            <div class="cat-desc">Upscale experience, elevated standards</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Fast Casual')">
+                            <div class="cat-icon"><i data-lucide="sandwich" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Fast Casual</div>
+                            <div class="cat-desc">Counter service, fresh & customizable</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Fast Food / QSR')">
+                            <div class="cat-icon"><i data-lucide="zap" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Fast Food / QSR</div>
+                            <div class="cat-desc">Speed, volume & standardization</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Café / Bakery / Coffee')">
+                            <div class="cat-icon"><i data-lucide="coffee" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Café / Bakery</div>
+                            <div class="cat-desc">Coffee, pastries & daytime dining</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Bar & Grill')">
+                            <div class="cat-icon"><i data-lucide="beer" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Bar & Grill</div>
+                            <div class="cat-desc">Drinks-forward with a food program</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Ghost Kitchen / Delivery Only')">
+                            <div class="cat-icon"><i data-lucide="package" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Ghost Kitchen</div>
+                            <div class="cat-desc">Delivery-only or virtual brand</div>
+                        </div>
+                        <div class="rtype-card" onclick="selectRestaurantType('Food Truck / Pop-Up')">
+                            <div class="cat-icon"><i data-lucide="truck" style="width:20px;height:20px;"></i></div>
+                            <div class="cat-label" style="font-size:1rem;">Food Truck</div>
+                            <div class="cat-desc">Mobile, pop-up or event-based concept</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Category Selector ── -->
+                <div id="re-category" style="display:none;">
+                    <button class="back-type-link" onclick="goBackToType()"><i data-lucide="arrow-left" style="width:13px;height:13px;"></i> Change restaurant type</button>
+                    <div class="cat-prompt">What area do you want to audit?</div>
+                    <p class="cat-prompt-sub">Each section has five targeted questions built for that part of your operation. Pick one and get your scored action plan.</p>
+                    <div class="cat-grid">
+                        <div class="cat-card" onclick="selectCategory('operations')">
+                            <div class="cat-icon"><i data-lucide="settings-2" style="width:22px;height:22px;"></i></div>
+                            <div class="cat-label">Operations</div>
+                            <div class="cat-desc">Systems, standards & team dependency</div>
+                        </div>
+                        <div class="cat-card" onclick="selectCategory('marketing')">
+                            <div class="cat-icon"><i data-lucide="megaphone" style="width:22px;height:22px;"></i></div>
+                            <div class="cat-label">Marketing</div>
+                            <div class="cat-desc">Local reach, digital presence & revenue growth</div>
+                        </div>
+                        <div class="cat-card" onclick="selectCategory('training')">
+                            <div class="cat-icon"><i data-lucide="graduation-cap" style="width:22px;height:22px;"></i></div>
+                            <div class="cat-label">Training</div>
+                            <div class="cat-desc">Onboarding, skill-building & team development</div>
+                        </div>
+                        <div class="cat-card" onclick="selectCategory('financial')">
+                            <div class="cat-icon"><i data-lucide="trending-up" style="width:22px;height:22px;"></i></div>
+                            <div class="cat-label">Financial</div>
+                            <div class="cat-desc">Costs, margins, profitability & cash flow</div>
+                        </div>
+                        <div class="cat-card" onclick="selectCategory('expansion')">
+                            <div class="cat-icon"><i data-lucide="map-pin" style="width:22px;height:22px;"></i></div>
+                            <div class="cat-label">Expansion</div>
+                            <div class="cat-desc">Multi-unit growth, scaling & new markets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Quiz ── -->
+                <div id="re-quiz" style="display:none;"><div id="re-step-content"></div></div>
+
+                <!-- ── Loading ── -->
+                <div class="re-load" id="re-load">
+                    <div class="re-dots"><span></span><span></span><span></span></div>
+                    <p class="load-label" id="load-main">Building your results…</p>
+                    <p class="load-sublabel" id="load-sub">This takes about 20 seconds</p>
+                    <div class="load-phases">
+                        <div class="lp-item active" id="lp0"><div class="lp-dot"></div> <span id="lp0-text">Analyzing your answers</span></div>
+                        <div class="lp-item" id="lp1"><div class="lp-dot"></div> <span id="lp1-text">Cross-referencing industry research</span></div>
+                        <div class="lp-item" id="lp2"><div class="lp-dot"></div> <span id="lp2-text">Building your action plan</span></div>
+                        <div class="lp-item" id="lp3"><div class="lp-dot"></div> <span id="lp3-text">Generating your tracker</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Results ── -->
+                <div class="re-result" id="re-result">
+                    <div class="score-section">
+                        <div class="score-label" id="scoreLabelText" style="text-align:center;margin-bottom:6px;">Readiness Score</div>
+                        <div class="gauge-wrap">
+                            <svg viewBox="0 0 220 132" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;display:block;margin:0 auto;overflow:visible;">
+                                <!-- Zone color backgrounds -->
+                                <path d="M 20,110 A 90,90 0 0,1 82.2,24.4" fill="none" stroke="rgba(239,68,68,0.2)" stroke-width="16" stroke-linecap="butt"/>
+                                <path d="M 82.2,24.4 A 90,90 0 0,1 162.9,37.2" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="16" stroke-linecap="butt"/>
+                                <path d="M 162.9,37.2 A 90,90 0 0,1 200,110" fill="none" stroke="rgba(34,197,94,0.2)" stroke-width="16" stroke-linecap="butt"/>
+                                <!-- Dark background track -->
+                                <path d="M 20,110 A 90,90 0 0,1 200,110" fill="none" stroke="#160830" stroke-width="12" stroke-linecap="butt"/>
+                                <!-- Animated score fill — starts fully hidden -->
+                                <path id="gaugeArcPath" d="M 20,110 A 90,90 0 0,1 200,110" fill="none" stroke="#ef4444" stroke-width="12" stroke-linecap="round" stroke-dasharray="282.74" stroke-dashoffset="282.74" style="transition:stroke-dashoffset 1.2s cubic-bezier(.25,.46,.45,.94),stroke .3s ease;"/>
+                                <!-- Zone separator ticks -->
+                                <line x1="84.4" y1="31.1" x2="80.0" y2="17.7" stroke="#0d0d14" stroke-width="3"/>
+                                <line x1="158.8" y1="42.9" x2="167.0" y2="31.5" stroke="#0d0d14" stroke-width="3"/>
+                                <!-- Score number -->
+                                <text id="gaugeScoreText" x="110" y="88" text-anchor="middle" font-size="46" font-weight="700" fill="#f5f0ff" font-family="Georgia,'Cormorant Garamond',serif">—</text>
+                                <text x="110" y="104" text-anchor="middle" font-size="11" fill="#5a4870" font-family="'DM Sans',sans-serif">out of 100</text>
+                                <text id="gaugeLevelText" x="110" y="120" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="2.5" fill="#5a4870" font-family="'DM Sans',sans-serif">—</text>
+                            </svg>
+                            <div class="gauge-zones">
+                                <span class="gz gz-red">● Critical <small>0–40</small></span>
+                                <span class="gz gz-yellow">● Developing <small>41–70</small></span>
+                                <span class="gz gz-green">● Strong <small>71–100</small></span>
+                            </div>
+                        </div>
+                        <div class="gauge-bench">
+                            <div class="gauge-bench-item"><div class="gauge-bench-dot" style="background:#2d1a4a;"></div> Industry avg: 42</div>
+                            <div class="gauge-bench-item"><div class="gauge-bench-dot" style="background:#7c3aed;"></div> Your score: <span id="scoreBenchLabel">—</span></div>
+                            <div class="gauge-bench-item"><div class="gauge-bench-dot" style="background:#c9a84c;"></div> Top operators: 78</div>
+                        </div>
+                    </div>
+                    <div id="re-snap-area"></div>
+                    <div class="data-points" id="dataPoints"></div>
+                    <div class="result-section-label">The Real Problem</div>
+                    <div class="result-reframe" id="rrf"></div>
+                    <div class="root-causes" id="rootCauses"></div>
+                    <div class="result-divider"></div>
+                    <div class="result-section-label">Your Action Plan</div>
+                    <div class="result-steps" id="rsteps"></div>
+
+                    <div class="tracker-section" id="trackerSection" style="display:none;">
+                        <div class="tracker-header">
+                            <div>
+                                <div class="tracker-title">Progress Tracker</div>
+                                <div class="tracker-subtitle">Saves automatically in your browser — it'll be here when you come back.</div>
+                            </div>
+                            <div class="tracker-progress-wrap">
+                                <svg class="progress-ring" viewBox="0 0 44 44">
+                                    <circle class="pr-bg" cx="22" cy="22" r="18"/>
+                                    <circle class="pr-fill" id="progressRingFill" cx="22" cy="22" r="18"/>
+                                </svg>
+                                <span class="progress-pct" id="progressPct">0%</span>
+                            </div>
+                        </div>
+                        <div class="tracker-tabs">
+                            <button class="tracker-tab active" onclick="showTrackerTab(0)" id="ttab0">Do This Week</button>
+                            <button class="tracker-tab" onclick="showTrackerTab(1)" id="ttab1">This Month</button>
+                            <button class="tracker-tab" onclick="showTrackerTab(2)" id="ttab2">90 Days</button>
+                        </div>
+                        <div id="trackerPanels"></div>
+                        <div class="tracker-actions">
+                            <button class="btn-dl-tracker" onclick="downloadTracker()">
+                                <i data-lucide="download" style="width:13px;height:13px;"></i> Download Excel Tracker
+                            </button>
+                            <span class="tracker-save-note">Progress saves automatically · <span id="trackerDoneCount">0</span> of 12 tasks complete</span>
+                        </div>
+                    </div>
+
+                    <div class="result-divider"></div>
+                    <div class="result-section-label">The Excellence Arc</div>
+                    <div class="result-arc"><div class="rarct" id="rarct"></div><div class="rarctl" id="rarctl"></div></div>
+
+                    <div class="dig-deeper-wrap" id="digDeepWrap">
+                        <p><strong>Want to go deeper?</strong><br>Answer 3 more targeted questions and get a more specific, detailed plan built around your exact situation.</p>
+                        <button class="btn-dig" onclick="startDig()">
+                            <i data-lucide="chevrons-down" style="width:15px;height:15px;"></i>
+                            Let's Dig Deeper
+                        </button>
+                    </div>
+
+                    <div class="rgate" id="gateBox" style="margin-top:24px;">
+                        <div class="rgt">Save Your Audit</div>
+                        <div class="rgs">Enter your details and we'll send you a copy of your results and full action plan.</div>
+                        <div class="ri-row">
+                            <input class="ri" id="rname" placeholder="Your name" />
+                            <input class="ri" id="remail" placeholder="Email address" />
+                        </div>
+                        <button class="rdl" id="rdl-btn" onclick="handleDl()">Send My Audit →</button>
+                        <div class="rsuc" id="rsuc">✦ &nbsp; You're in. Let's build something excellent.</div>
+                    </div>
+                    <button class="rreset" onclick="resetAll()">Start a new audit →</button>
+                </div>
+
+                <!-- ── Deep Quiz ── -->
+                <div class="re-deep-quiz" id="re-deep-quiz">
+                    <div class="deep-quiz-header">
+                        <div class="deep-badge">Deeper Look</div>
+                        <p id="deep-q-label">Deeper Question 1 of 3</p>
+                    </div>
+                    <div id="re-deep-step-content"></div>
+                </div>
+
+                <!-- ── Deep Result ── -->
+                <div class="re-deep-result" id="re-deep-result">
+                    <div class="deep-result-header">
+                        <div class="deep-result-icon"><i data-lucide="search" style="width:20px;height:20px;"></i></div>
+                        <div>
+                            <h4>Your Full Results</h4>
+                            <p>Built from all 8 of your answers — this is the specific work in front of you.</p>
+                        </div>
+                    </div>
+                    <div class="result-section-label">What's Really Going On</div>
+                    <div class="deep-reframe" id="deep-rrf"></div>
+                    <div class="result-divider"></div>
+                    <div class="result-section-label">Your Action Plan</div>
+                    <div id="deep-steps"></div>
+                    <div class="result-divider"></div>
+                    <div class="result-section-label">Where This Takes You</div>
+                    <div class="deep-arc"><div class="darct" id="deep-arc-text"></div><div class="darctl" id="deep-arc-tag"></div></div>
+                    <div class="rgate" style="margin-top:0;">
+                        <div class="rgt">Save Your Full Report</div>
+                        <div class="rgs">Enter your details to receive your complete results and full action plan.</div>
+                        <div class="ri-row">
+                            <input class="ri" id="rname2" placeholder="Your name" />
+                            <input class="ri" id="remail2" placeholder="Email address" />
+                        </div>
+                        <button class="rdl" id="rdl-btn2" onclick="handleDl2()">Send My Full Report →</button>
+                        <div class="rsuc" id="rsuc2">✦ &nbsp; You're in. Let's build something excellent.</div>
+                    </div>
+                    <button class="rreset" onclick="resetAll()">Start a new audit →</button>
+                </div>
+
+            </div><!-- /card-body -->
+        </div><!-- /audit-card -->
+    </div>
+</section>
+
+<div class="stats-strip">
+    <div class="wrap">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <div class="stat-num">75%</div>
+                <div class="stat-label">Annual turnover rate in the restaurant industry — one of the highest of any sector</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">$4,700</div>
+                <div class="stat-label">Average cost to replace a single hourly employee when training and lost productivity are factored in</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">70%</div>
+                <div class="stat-label">Of restaurant failures are attributed to management breakdown — not concept, location, or capital</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="bottom-cta">
+    <div class="wrap">
+        <h2>Ready to Go Deeper?<br>Let's Work Together.</h2>
+        <p>The audit gives you direction. A consulting engagement gives you the system, the support, and the accountability to actually build it.</p>
+        <a href="index.html#contact" class="btn-cta">Work With Us <i data-lucide="arrow-right" style="width:15px;height:15px;"></i></a>
+    </div>
+</section>
+
+<footer class="page-footer">
+    <div class="wrap footer-inner">
+        <div class="foot-logo">Restaurant<em>Excellence</em></div>
+        <p class="foot-copy">© 2025 Restaurant Excellence. All rights reserved.</p>
+        <div class="foot-links"><a href="index.html">Main Site</a><a href="index.html#contact">Contact</a></div>
+    </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   RESTAURANT EXCELLENCE AUDIT — AI ENGINE
+══════════════════════════════════════════════════════════════════ */
+
+const RE_WORKER_URL = 'https://re-audit-api.pierce-437.workers.dev';
+const RE_MODEL      = 'claude-opus-4-5';
+
+/* ─── JSON RESPONSE SCHEMA (appended to every system prompt) ─── */
+const JSON_SCHEMA = `
+Respond ONLY with valid JSON — no markdown fences, no text outside the JSON. Use this exact structure:
+{
+  "headline": "8-12 word precise diagnosis naming the core failure",
+  "readiness_score": 45,
+  "reframe": "3-4 sentences diagnosing what is actually happening. Include at least 2 specific statistics with named sources. Direct tone.",
+  "root_causes": ["Specific root cause 1","Root cause 2","Root cause 3"],
+  "benchmarks": [
+    {"stat": "75%", "label": "What this statistic reveals about their situation", "bar": 75, "source": "Source name"},
+    {"stat": "$4,700", "label": "What this figure means in their context", "bar": 55, "source": "Source name"}
+  ],
+  "action_plan": [
+    {"priority": "Do This Week", "timeline": "Days 1–7", "title": "Specific action step", "body": "3-4 sentences with exact mechanics.", "success_metric": "Observable outcome at Day 7"},
+    {"priority": "Build This Month", "timeline": "Days 8–30", "title": "Step 2", "body": "3-4 sentences.", "success_metric": "Measurable outcome at Day 30"},
+    {"priority": "Build to Scale", "timeline": "Days 30–90", "title": "Step 3", "body": "3-4 sentences.", "success_metric": "90-day system outcome"}
+  ],
+  "arc": {"text": "2-3 sentences about the trajectory if they do the work.", "tagline": "A single memorable phrase"}
+}`;
+
+/* ─── SYSTEM PROMPTS ─── */
+const SYSTEM_OPERATIONS = `You are a direct, experienced restaurant operations consultant. You've worked with independent operators, growing chains, and franchise groups for 20+ years. You give honest, specific, data-driven diagnoses — not generic encouragement.
+
+You cite real research:
+- Bureau of Labor Statistics (workforce & turnover data)
+- Cornell Center for Hospitality Research
+- Harvard Business School (Luca 2011 Yelp study — 1 star = 5-9% revenue change)
+- Gallup State of the American Manager (managers account for 70% of variance in team engagement)
+- National Restaurant Association annual data
+- Toast State of the Restaurant Industry
+- E-Myth Revisited (Gerber), Setting the Table (Meyer), Multi-Unit Leadership (Sullivan)
+
+Be specific. Name sources. Give operators concrete mechanics they can act on today.
+${JSON_SCHEMA}`;
+
+const SYSTEM_MARKETING = `You are a restaurant marketing specialist with 20+ years of experience growing independent restaurants and small chains through local marketing. You understand digital marketing, social media, SEO, paid advertising, email marketing, and reputation management.
+
+When you receive a restaurant name and zip code or city, factor in what you know about that market. Consider regional demographics, competition density, and local marketing dynamics to make your recommendations geographically specific.
+
+You cite real research:
+- Harvard Business School Yelp study (Luca 2011 — 1 star = 5-9% revenue change)
+- Toast State of the Restaurant Industry (digital ordering, online discovery trends)
+- National Restaurant Association marketing data
+- BrightLocal Local Consumer Review Survey
+- Google restaurant search behavior data
+- Meta restaurant advertising benchmarks
+
+Be specific about tactics, budgets, and platforms. Tell operators exactly what to do and in what order. Be direct about what is wasted money in restaurant marketing.
+${JSON_SCHEMA}`;
+
+const SYSTEM_TRAINING = `You are a restaurant training and development specialist. You have built training programs for independent restaurants, regional chains, and franchise systems. You understand onboarding design, skills certification, manager development, and how training directly impacts retention, quality, and profitability.
+
+You cite real research:
+- Bureau of Labor Statistics (turnover and retention data)
+- Cornell Center for Hospitality Research (training ROI studies)
+- SHRM onboarding effectiveness research
+- National Restaurant Association workforce training data
+- Gallup employee engagement research
+
+Give operators specific, system-based training fixes — not vague advice. Identify what is broken in their training and give them an exact rebuild sequence.
+${JSON_SCHEMA}`;
+
+const SYSTEM_FINANCIAL = `You are a restaurant financial consultant. You have diagnosed and fixed food cost, labor cost, prime cost, cash flow, and profitability problems for independent operators and multi-unit groups for 20+ years. You speak in specific percentages, dollar amounts, and actionable financial mechanics.
+
+Industry benchmarks you use:
+- Food cost target: 28-32% for full service, 25-30% for QSR
+- Labor cost target: 25-35% depending on concept
+- Prime cost target: under 60% for profitable operations
+- Net profit target: 10-15% is excellent; 3-6% is industry average
+
+You cite real research:
+- National Restaurant Association financial benchmarks
+- Cornell Center for Hospitality Research financial studies
+- Toast restaurant financial benchmarks
+- USDA food cost data
+
+Be specific about the numbers. Tell operators exactly what to measure, what target to hit, and what to change. Do not be vague.
+${JSON_SCHEMA}`;
+
+const SYSTEM_EXPANSION = `You are a multi-unit restaurant development consultant. You have guided operators through opening their second, third, and tenth locations. You are direct about readiness — if someone is not ready to expand, say so clearly and tell them what has to happen first.
+
+You cite real research:
+- National Restaurant Association multi-unit data
+- Cornell Center for Hospitality Research expansion studies
+- E-Myth Revisited (Gerber) — systems must precede scaling
+- Multi-Unit Leadership (Sullivan)
+- QSR Magazine expansion and franchise data
+
+Be honest about risk. Give operators a clear expansion readiness assessment and a precise sequence for what to build before, during, and after opening a new location.
+${JSON_SCHEMA}`;
+
+/* ─── CATEGORY DEFINITIONS ─── */
+const CATEGORIES = {
+  operations: {
+    label: 'Operations Audit',
+    scoreLabel: 'Operational Readiness Score',
+    pills: ['Challenge','Scale','Experience','Team','Vision'],
+    phases: [
+      { main:'Reviewing your operational answers…',      sub:'Identifying the primary bottleneck',              lp:0 },
+      { main:'Checking against industry benchmarks…',   sub:'BLS · Cornell · Harvard · Gallup · NRA',         lp:1 },
+      { main:'Building your action plan…',              sub:'Matching to your scale and team structure',       lp:2 },
+      { main:'Generating your progress tracker…',       sub:'Building your 30/60/90-day roadmap',             lp:3 },
+    ],
+    questions: [
+      { q:"What's your biggest operational challenge right now?", opts:["My team can't run it without me","Inconsistent standards & execution","I want to grow but feel stuck","High turnover / bad culture","Guest experience is suffering"], ph:"Or describe it in your own words…" },
+      { q:"How many locations do you operate?", opts:["1 location","2–3 locations","4–9 locations","10+"], ph:"Or tell us more about your setup…" },
+      { q:"How long have you been in this role?", opts:["Under 1 year","1–3 years","3–7 years","7+ years"], ph:"Or add any context…" },
+      { q:"What does your team structure look like?", opts:["Just me and hourly staff","1–2 managers I rely on","Full management team","No real structure yet"], ph:"Or describe your team…" },
+      { q:"What does winning look like in the next 12 months?", opts:["Step back without things falling apart","Open another location","Build a team that leads itself","Get consistent — stop fighting fires","Turn this into something I'm proud of"], ph:"Or describe it in your own words…" }
+    ],
+    deepQuestions: {
+      "My team can't run it without me": [
+        { q:"When you're not there, what typically breaks first?", opts:["Decision-making stops — nobody has authority","Quality drops within an hour","Guest complaints go unhandled","Staff stop following the system"], ph:"Or describe what you've seen…" },
+        { q:"How much of your operation is documented in writing?", opts:["Almost nothing is written down","A few critical things","Core processes exist but aren't consistently followed","Most operations are fully documented"], ph:"Describe your documentation reality…" },
+        { q:"What would have to be true to take a full week off?", opts:["A manager who knows everything I know","Written systems anyone could follow","Both strong leaders AND documented systems","I honestly don't know"], ph:"Describe what you'd actually need…" }
+      ],
+      "default": [
+        { q:"Where does the problem hurt most — guests, team, or finances?", opts:["Guests feel it directly","My team is burning out","It's showing up in the numbers","All three"], ph:"Describe where you feel the pain most…" },
+        { q:"How long has this been a problem?", opts:["Just started — last 1-3 months","6-12 months","1-2 years","It's always been this way"], ph:"Or describe the timeline…" },
+        { q:"What have you already tried that hasn't worked?", opts:["Hiring more people","Changing the schedule or structure","Training harder","I haven't really addressed it yet"], ph:"Describe what you've attempted…" }
+      ]
+    },
+    buildMsg: (a) => `Restaurant operator assessment:
+- Primary challenge: ${a[0]}
+- Locations operated: ${a[1]}
+- Years in this role: ${a[2]}
+- Team structure: ${a[3]}
+- 12-month goal: ${a[4]}
+
+Give a direct, data-driven operations diagnosis and a precise, actionable plan for this specific operator.`,
+    system: SYSTEM_OPERATIONS
+  },
+
+  marketing: {
+    label: 'Marketing Audit',
+    scoreLabel: 'Marketing Readiness Score',
+    pills: ['Restaurant','Location','Channels','Budget','Goal'],
+    phases: [
+      { main:'Reviewing your restaurant and market…',        sub:'Factoring in location and competition dynamics',   lp:0 },
+      { main:'Evaluating your channel mix and spend…',      sub:'Benchmarking against high-performing operators',   lp:1 },
+      { main:'Building your local marketing plan…',         sub:'Matching tactics to your budget and goals',        lp:2 },
+      { main:'Generating your action plan…',                sub:'Prioritizing highest-ROI moves first',             lp:3 },
+    ],
+    questions: [
+      { q:"What's the name of your restaurant?", opts:[], textOnly:true, ph:"e.g. The Blue Plate Diner" },
+      { q:"What's your zip code or city?", opts:[], textOnly:true, ph:"e.g. 78701 or Austin, TX" },
+      { q:"What marketing channels are you currently using?", opts:["Social media (organic only)","Social media + paid ads","Google Ads / local SEO focus","Email & loyalty programs","Mostly word of mouth — little to no marketing"], ph:"Or describe your current marketing mix…" },
+      { q:"What's your monthly marketing budget?", opts:["Under $500","$500–$1,500","$1,500–$5,000","$5,000+","No dedicated budget"], ph:"Or describe your spend…" },
+      { q:"What does marketing success look like in 12 months?", opts:["More new guests finding us","Better online ratings & reviews","Higher return guest frequency","Packed weeknights, not just weekends","A clear brand people recognize and talk about"], ph:"Or describe your goal…" }
+    ],
+    deepQuestions: {
+      "default": [
+        { q:"How do most new guests currently hear about you?", opts:["Google search or Google Maps","Instagram or Facebook","Word of mouth from regulars","Walk-by traffic","We're not sure — we don't track it"], ph:"Describe how guests find you now…" },
+        { q:"What's your current Google or Yelp rating?", opts:["4.5+ stars","4.0–4.4 stars","3.5–3.9 stars","Under 3.5 stars","Not sure / haven't checked recently"], ph:"Or tell us your situation…" },
+        { q:"Have you run paid advertising before?", opts:["Never tried it","Tried it but didn't see results","Run it occasionally","Run it consistently and it works"], ph:"Describe your paid advertising experience…" }
+      ]
+    },
+    buildMsg: (a) => `Restaurant marketing assessment:
+- Restaurant name: ${a[0]}
+- Location (zip code / city): ${a[1]}
+- Current marketing channels: ${a[2]}
+- Monthly marketing budget: ${a[3]}
+- 12-month marketing goal: ${a[4]}
+
+This restaurant is at ${a[1]}. Factor in what you know about this type of market — competition density, local demographics, and what marketing channels typically perform well for restaurants in this area and budget range. Give a location-specific diagnosis and a precise, budget-appropriate marketing action plan.`,
+    system: SYSTEM_MARKETING
+  },
+
+  training: {
+    label: 'Training Audit',
+    scoreLabel: 'Training Readiness Score',
+    pills: ['Challenge','Process','Timeline','Volume','Goal'],
+    phases: [
+      { main:'Reviewing your training answers…',         sub:'Identifying where the system breaks down',        lp:0 },
+      { main:'Checking against retention research…',    sub:'Cornell · SHRM · NRA · BLS retention data',       lp:1 },
+      { main:'Building your training plan…',            sub:'Matching to your team size and structure',        lp:2 },
+      { main:'Generating your training tracker…',       sub:'Sequencing the rebuild for your operation',       lp:3 },
+    ],
+    questions: [
+      { q:"What's your biggest training challenge?", opts:["New hires quit before they're fully trained","Quality drops when I'm not watching","Managers train inconsistently — everyone learns something different","No real system — it's all verbal and on-the-fly","Can't keep up with the pace of turnover"], ph:"Or describe it in your own words…" },
+      { q:"How do you currently onboard new staff?", opts:["They shadow someone for a few shifts","A manager walks them through it verbally","We have a written manual they read","Certified skills sign-off required before solo shifts"], ph:"Describe your current onboarding reality…" },
+      { q:"How long does it take a new hire to work independently?", opts:["1–3 days","About a week","2–3 weeks","A month or more","They never fully get there"], ph:"Or describe what you've typically seen…" },
+      { q:"How many people are you training at any given time?", opts:["1–2 at a time","3–5 simultaneously","6–10 at a time","10+ in constant rotation"], ph:"Or describe your training volume…" },
+      { q:"What does a world-class training program look like for you?", opts:["Consistent quality no matter who's training","New hires ready faster with less hand-holding","Managers who can train without me in the room","A system that works even during high turnover"], ph:"Or describe the outcome you want…" }
+    ],
+    deepQuestions: {
+      "default": [
+        { q:"Do you have a written training manual or SOP?", opts:["No — nothing is written down","Partial — some things are documented","Yes — but it's not consistently used","Yes — and it's the foundation of training"], ph:"Describe your documentation situation…" },
+        { q:"Who does most of the training right now?", opts:["Me — I do almost all of it","One or two key employees","Whoever is available that shift","A designated trainer or training manager"], ph:"Describe who actually trains your people…" },
+        { q:"What's your 30-day retention rate for new hires?", opts:["Under 50% — most leave quickly","50–70% — better but still high churn","70–85% — decent but room to improve","85%+ — most make it through"], ph:"Or estimate what you've seen…" }
+      ]
+    },
+    buildMsg: (a) => `Restaurant training assessment:
+- Biggest training challenge: ${a[0]}
+- Current onboarding method: ${a[1]}
+- Time to independent work: ${a[2]}
+- Training volume (concurrent): ${a[3]}
+- 12-month training goal: ${a[4]}
+
+Give a direct diagnosis of what is broken in this training operation and a precise, system-focused action plan to rebuild it.`,
+    system: SYSTEM_TRAINING
+  },
+
+  financial: {
+    label: 'Financial Audit',
+    scoreLabel: 'Financial Health Score',
+    pills: ['Challenge','Revenue','Food Cost','Labor','Goal'],
+    phases: [
+      { main:'Reviewing your financial answers…',         sub:'Identifying cost and margin breakdowns',           lp:0 },
+      { main:'Checking against financial benchmarks…',   sub:'NRA · Cornell · Toast financial data',             lp:1 },
+      { main:'Building your financial plan…',            sub:'Targeting highest-impact cost levers',             lp:2 },
+      { main:'Generating your financial tracker…',       sub:'Building your profitability roadmap',              lp:3 },
+    ],
+    questions: [
+      { q:"What's your biggest financial challenge right now?", opts:["Food cost is out of control","Labor cost is eating my margins","Revenue is flat or declining","Cash flow is unpredictable — feast or famine","I don't fully understand my own numbers"], ph:"Or describe it in your own words…" },
+      { q:"What's your approximate annual revenue?", opts:["Under $500K","$500K–$1M","$1M–$3M","$3M–$7M","$7M+"], ph:"Or estimate your revenue range…" },
+      { q:"What's your current food cost percentage?", opts:["Under 28%","28–32%","32–36%","36–40%","Over 40% / I'm not tracking it"], ph:"Or tell us your approximate food cost…" },
+      { q:"What's your current labor cost percentage?", opts:["Under 25%","25–30%","30–35%","35–40%","Over 40% / I'm not tracking it"], ph:"Or tell us your approximate labor cost…" },
+      { q:"What does financial health look like in 12 months?", opts:["Consistent 10–15% net profit","Predictable cash flow week to week","Prime cost under 60%","Actually understanding my P&L well enough to make decisions","Getting more profit from existing revenue without adding volume"], ph:"Or describe the financial outcome you want…" }
+    ],
+    deepQuestions: {
+      "default": [
+        { q:"Do you review your P&L statement monthly?", opts:["I don't have a formal P&L","I have one but rarely look at it","I review it monthly but don't fully understand it","Yes — I review it monthly and act on it"], ph:"Describe your current financial review process…" },
+        { q:"Where do you think the biggest profit leak is?", opts:["Food waste and over-portioning","Scheduling inefficiency — too many hours","Menu pricing is too low","Theft or untracked comps","I don't know — that's the problem"], ph:"Describe what you suspect is happening…" },
+        { q:"Do you currently use any food cost or inventory tracking?", opts:["No system — we guess","Spot-checking a few items","Basic spreadsheet tracking","Full inventory system with theoretical vs. actual tracking"], ph:"Describe your current inventory approach…" }
+      ]
+    },
+    buildMsg: (a) => `Restaurant financial assessment:
+- Biggest financial challenge: ${a[0]}
+- Annual revenue range: ${a[1]}
+- Current food cost %: ${a[2]}
+- Current labor cost %: ${a[3]}
+- 12-month financial goal: ${a[4]}
+
+Give a direct, numbers-focused diagnosis. Use the benchmarks (food cost 28-32%, labor 25-35%, prime cost under 60%) to evaluate this operator's situation specifically. Give a precise financial action plan with measurable targets.`,
+    system: SYSTEM_FINANCIAL
+  },
+
+  expansion: {
+    label: 'Expansion Audit',
+    scoreLabel: 'Expansion Readiness Score',
+    pills: ['Locations','Concern','Timeline','Capital','Vision'],
+    phases: [
+      { main:'Reviewing your expansion answers…',         sub:'Evaluating systems, leadership, and capital',      lp:0 },
+      { main:'Checking against multi-unit benchmarks…',  sub:'NRA · Cornell · Sullivan · QSR Magazine data',     lp:1 },
+      { main:'Building your expansion plan…',            sub:'Sequencing what must happen and in what order',    lp:2 },
+      { main:'Generating your expansion tracker…',       sub:'Building your pre-launch readiness roadmap',       lp:3 },
+    ],
+    questions: [
+      { q:"How many locations do you currently operate?", opts:["1 — planning first expansion","2–3 locations","4–9 locations","10+ locations"], ph:"Or describe your current footprint…" },
+      { q:"What's your biggest expansion concern?", opts:["The current location can't run without me yet","I don't have the capital or financing","I can't replicate quality at scale","I don't have the leadership pipeline","I don't know how to evaluate new sites or markets"], ph:"Or describe what's holding you back…" },
+      { q:"What's your expansion timeline?", opts:["Actively looking now","6–12 months out","12–24 months out","3+ years — in planning mode","Just exploring the idea"], ph:"Or describe where you are in the process…" },
+      { q:"What's your capital situation?", opts:["Self-funded — using operating profits","SBA loan or bank financing","Private investors or partners","Franchise model or licensing","Not sure yet — still figuring it out"], ph:"Or describe your funding approach…" },
+      { q:"What does successful expansion look like?", opts:["A second location running at the same quality","5 locations in 5 years","A brand that can franchise or license","A business I can eventually sell or exit","Enough scale to bring on real professional leadership"], ph:"Or describe your vision…" }
+    ],
+    deepQuestions: {
+      "default": [
+        { q:"Could your current location run at full quality without you for 30 days?", opts:["No — it would break down in days","It would hold but quality would slip","Mostly yes — a few things need me","Yes — it runs without me consistently"], ph:"Describe honestly what would happen…" },
+        { q:"How much of your operation is documented in writing?", opts:["Almost nothing is written down","A few key processes are documented","Most processes exist on paper","Fully documented SOPs for every position"], ph:"Describe your documentation reality…" },
+        { q:"What's your current net profit margin?", opts:["Under 5%","5–10%","10–15%","15%+","I don't know my net profit margin"], ph:"Or estimate your margin…" }
+      ]
+    },
+    buildMsg: (a) => `Restaurant expansion assessment:
+- Current locations: ${a[0]}
+- Biggest expansion concern: ${a[1]}
+- Expansion timeline: ${a[2]}
+- Capital situation: ${a[3]}
+- Expansion vision: ${a[4]}
+
+Give a direct, honest assessment of whether this operator is ready to expand and what must happen first. If they're not ready, say so clearly and give them a precise readiness-building action plan. If they are ready, give them the critical sequencing for a successful next location.`,
+    system: SYSTEM_EXPANSION
+  }
+};
+
+/* ─── STATE ─── */
+const STEP_CSS = ['sp-high','sp-med','sp-build'];
+let restaurantType    = null;
+let selectedCategory  = null;
+let activeQuestions   = [];
+let current = 0;
+const answers = Array(5).fill('');
+let deepCurrent = 0;
+const deepAnswers = Array(3).fill('');
+let lastAuditData       = null;
+let trackerKey          = '';
+let trackerState        = null;
+let placesData          = null;
+let communityResults    = null;
+let placesLookupPromise = null;
+
+/* ─── API CALL ─── */
+async function callClaude(userContent, systemOverride) {
+  if (!RE_WORKER_URL || RE_WORKER_URL === 'YOUR_WORKER_URL_HERE') throw new Error('no_key');
+  const resp = await fetch(RE_WORKER_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: RE_MODEL,
+      max_tokens: 2500,
+      system: systemOverride || SYSTEM_OPERATIONS,
+      messages: [{ role: 'user', content: userContent }],
+    }),
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    const detail = err?.error?.message || err?.message || JSON.stringify(err);
+    throw new Error(`[${resp.status}] ${detail}`);
+  }
+  const json = await resp.json();
+  const text = json.content[0].text.trim();
+  const clean = text.replace(/^```(?:json)?\n?/,'').replace(/\n?```$/,'');
+  return JSON.parse(clean);
+}
+
+/* ─── GOOGLE PLACES LOOKUP ─── */
+async function lookupRestaurant(name, location) {
+  placesData = null;
+  communityResults = null;
+  try {
+    const [placesResp, searchResp] = await Promise.allSettled([
+      fetch(RE_WORKER_URL + '/places', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ name, location }),
+      }),
+      fetch(RE_WORKER_URL + '/search', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query: `"${name}" ${location} (school partnership OR community OR fundraiser OR local event OR sponsor)` }),
+      }),
+    ]);
+
+    if (placesResp.status === 'fulfilled' && placesResp.value.ok) {
+      placesData = await placesResp.value.json();
+    }
+    if (searchResp.status === 'fulfilled' && searchResp.value.ok) {
+      const sd = await searchResp.value.json();
+      communityResults = sd.results || [];
+    }
+  } catch(e) {
+    console.log('Google lookup failed:', e.message);
+  }
+}
+
+/* ─── SELECT RESTAURANT TYPE ─── */
+function selectRestaurantType(type) {
+  restaurantType = type;
+  document.getElementById('re-rtype').style.display    = 'none';
+  document.getElementById('re-category').style.display = 'block';
+  lucide.createIcons();
+}
+function goBackToType() {
+  document.getElementById('re-category').style.display = 'none';
+  document.getElementById('re-rtype').style.display    = 'block';
+  restaurantType = null;
+}
+
+/* ─── SELECT CATEGORY ─── */
+function selectCategory(key) {
+  selectedCategory = CATEGORIES[key];
+  activeQuestions  = selectedCategory.questions;
+  current = 0;
+  answers.fill('');
+
+  // Update card title
+  document.getElementById('cardTitle').textContent = selectedCategory.label;
+
+  // Update score label
+  document.getElementById('scoreLabelText').textContent = selectedCategory.scoreLabel;
+
+  // Update pill labels
+  const pills = selectedCategory.pills;
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('pill-' + i);
+    if (el) el.querySelector('.pill-lbl').textContent = pills[i] || ('Q' + (i+1));
+  }
+
+  // Show quiz UI
+  document.getElementById('re-category').style.display = 'none';
+  document.getElementById('re-quiz').style.display     = 'block';
+  document.getElementById('progWrap').style.display    = 'block';
+  document.getElementById('stepPills').style.display   = 'flex';
+
+  renderStep();
+}
+
+/* ─── RENDER STEP ─── */
+function renderStep() {
+  for (let i = 0; i < 5; i++) {
+    document.getElementById('ps' + i).className    = 'prog-seg'  + (i < current ? ' done' : i === current ? ' active' : '');
+    document.getElementById('pill-' + i).className = 'step-pill' + (i < current ? ' done' : i === current ? ' active' : '');
+  }
+  const pct = Math.round((current / 5) * 100);
+  document.getElementById('prog-lbl').textContent = `Question ${current + 1} of 5`;
+  document.getElementById('prog-pct').textContent = `${pct}% complete`;
+
+  const q      = activeQuestions[current];
+  const saved  = answers[current];
+  const isOpt  = q.opts && q.opts.includes(saved);
+  const textOnly = !q.opts || q.opts.length === 0;
+
+  const optsHtml = textOnly ? '' :
+    `<div class="opts-grid" id="opts-wrap">${q.opts.map(o =>
+      `<button class="opt-btn${saved===o?' sel':''}" data-val="${o.replace(/"/g,'&quot;')}" onclick="selectOpt(this)">${o}</button>`
+    ).join('')}</div>
+    <div class="or-divider">or write your own</div>`;
+
+  document.getElementById('re-step-content').innerHTML = `
+    <div class="q-block">
+      <div class="q-text">${q.q}</div>
+      ${optsHtml}
+      <textarea class="q-textarea${textOnly?' text-only':''}" id="re-ta" placeholder="${q.ph}">${isOpt ? '' : saved}</textarea>
+      <div class="nav-row">
+        ${current > 0
+          ? '<button class="btn-back-card" onclick="goBack()">← Back</button>'
+          : '<button class="btn-back-card" onclick="goBackToCategory()">← Categories</button>'}
+        <button class="btn-next-card" onclick="goNext()">${current === 4 ? 'Run My Audit →' : 'Next →'}</button>
+      </div>
+    </div>`;
+
+  if (!textOnly) {
+    document.getElementById('re-ta').addEventListener('input', () => {
+      document.querySelectorAll('#opts-wrap .opt-btn').forEach(b => b.classList.remove('sel'));
+    });
+  }
+}
+
+function goBackToCategory() {
+  document.getElementById('re-quiz').style.display   = 'none';
+  document.getElementById('progWrap').style.display  = 'none';
+  document.getElementById('stepPills').style.display = 'none';
+  document.getElementById('re-category').style.display = 'block';
+  document.getElementById('cardTitle').textContent   = 'The Excellence Audit';
+  selectedCategory = null;
+  current = 0;
+  answers.fill('');
+}
+
+function selectOpt(el) {
+  document.querySelectorAll('#opts-wrap .opt-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('re-ta').value = '';
+}
+function getAnswer() {
+  const sel = document.querySelector('#opts-wrap .opt-btn.sel');
+  return sel ? sel.dataset.val : (document.getElementById('re-ta')?.value.trim() || '');
+}
+function goNext() {
+  const ans = getAnswer();
+  if (!ans) {
+    const ta = document.getElementById('re-ta');
+    ta.style.borderColor = '#7c3aed'; ta.style.boxShadow = '0 0 0 3px rgba(124,58,237,.15)'; ta.focus();
+    setTimeout(() => { ta.style.borderColor = '#2d1a4a'; ta.style.boxShadow = ''; }, 1800);
+    return;
+  }
+  answers[current] = ans;
+  // Kick off Google Places + community search in background as soon as we have name + location (Marketing Q2)
+  if (selectedCategory?.label === 'Marketing Audit' && current === 1) {
+    placesLookupPromise = lookupRestaurant(answers[0], ans);
+  }
+  if (current < 4) { current++; renderStep(); }
+  else { runAudit(); }
+}
+function goBack() { answers[current] = getAnswer(); current--; renderStep(); }
+
+/* ─── RUN AUDIT ─── */
+async function runAudit() {
+  document.getElementById('re-quiz').style.display   = 'none';
+  document.getElementById('progWrap').style.display  = 'none';
+  document.getElementById('stepPills').style.display = 'none';
+  document.getElementById('re-load').style.display   = 'block';
+  document.getElementById('cardBadge').textContent   = 'Building your results…';
+
+  const PHASES = selectedCategory.phases;
+
+  // Set loading phase text
+  PHASES.forEach((p, i) => {
+    const el = document.getElementById('lp' + i + '-text');
+    if (el) el.textContent = p.main.replace('…','');
+  });
+
+  let phaseIdx = 0;
+  const phaseTimer = setInterval(() => {
+    if (phaseIdx > 0) {
+      const prev = document.getElementById('lp' + (phaseIdx - 1));
+      if (prev) prev.className = 'lp-item done';
+    }
+    if (phaseIdx < PHASES.length) {
+      const p = PHASES[phaseIdx];
+      document.getElementById('load-main').textContent = p.main;
+      document.getElementById('load-sub').textContent  = p.sub;
+      const el = document.getElementById('lp' + p.lp);
+      if (el) el.className = 'lp-item active';
+      phaseIdx++;
+    } else { clearInterval(phaseTimer); }
+  }, 1600);
+
+  try {
+    // Await Google Places data if it was triggered (runs in parallel while user answered Q3-Q5)
+    if (placesLookupPromise) {
+      try { await placesLookupPromise; } catch(e) {}
+      placesLookupPromise = null;
+    }
+
+    // Build real-data annotation for Claude when we have Google data
+    let googleNote = '';
+    if (selectedCategory?.label === 'Marketing Audit') {
+      if (placesData?.found) {
+        const stars    = placesData.rating    ? `${placesData.rating}/5 stars` : 'rating unknown';
+        const reviews  = placesData.reviewCount != null ? `${placesData.reviewCount} Google reviews` : 'review count unknown';
+        const website  = placesData.hasWebsite ? 'Has a website' : 'NO website listed on Google';
+        const hours    = placesData.hasHours   ? 'Hours posted on Google' : 'No hours posted on Google';
+        const phone    = placesData.phone      ? `Phone listed: ${placesData.phone}` : 'No phone on Google';
+        googleNote = `\n\nREAL GOOGLE DATA (live): ${stars} · ${reviews} · ${website} · ${hours} · ${phone}. Use these exact numbers in your diagnosis and score — do not estimate or fabricate review counts.`;
+      } else if (placesData?.found === false) {
+        googleNote = `\n\nCRITICAL: This restaurant was NOT FOUND on Google Maps. That alone is a major marketing problem — invisibility is the root issue. Address this prominently.`;
+      }
+    }
+
+    const typeNote = restaurantType ? `RESTAURANT CONCEPT: ${restaurantType}\nAll benchmarks, cost targets, labor percentages, and examples MUST be calibrated specifically to this concept model.\n\n` : '';
+    const data = await callClaude(typeNote + selectedCategory.buildMsg(answers) + googleNote, selectedCategory.system);
+    lastAuditData = data;
+    clearInterval(phaseTimer);
+    await new Promise(r => setTimeout(r, 700));
+    document.getElementById('re-load').style.display = 'none';
+    renderAuditResults(data);
+  } catch(err) {
+    clearInterval(phaseTimer);
+    document.getElementById('re-load').style.display = 'none';
+    showError(err.message);
+  }
+}
+
+/* ─── ERROR STATE ─── */
+function showError(msg) {
+  document.getElementById('re-quiz').style.display   = 'block';
+  document.getElementById('progWrap').style.display  = 'block';
+  document.getElementById('stepPills').style.display = 'flex';
+  current = 0; renderStep();
+  const existing = document.getElementById('re-error');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 're-error'; el.className = 're-error';
+  el.innerHTML = msg === 'no_key'
+    ? `<strong>AI not yet configured.</strong> The Cloudflare Worker URL has not been set up yet.`
+    : `<strong>Something went wrong:</strong> ${msg}. Please try again.`;
+  document.getElementById('re-step-content').before(el);
+  document.getElementById('cardBadge').textContent = 'Free · 3–5 min';
+}
+
+/* ─── RENDER RESULTS ─── */
+function renderAuditResults(data) {
+  const score = Math.max(10, Math.min(95, data.readiness_score || 45));
+  document.getElementById('scoreBenchLabel').textContent = score;
+  animateGauge(score);
+
+  const dpEl = document.getElementById('dataPoints');
+  dpEl.innerHTML = (data.benchmarks || []).slice(0,2).map(d => `
+    <div class="dp-card">
+      <div class="dp-num">${d.stat}</div>
+      <div class="dp-label">${d.label}</div>
+      <div class="dp-bar-track"><div class="dp-bar-fill" style="width:0%" data-target="${Math.min(d.bar||50,100)}"></div></div>
+      <div class="dp-source">${d.source}</div>
+    </div>`).join('');
+  setTimeout(() => { dpEl.querySelectorAll('.dp-bar-fill').forEach(b => { b.style.width = b.dataset.target + '%'; }); }, 300);
+
+  document.getElementById('rrf').innerHTML =
+    `<strong style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.12rem;color:#f5f0ff;line-height:1.3;margin-bottom:10px;">${data.headline || ''}</strong>${data.reframe || ''}`;
+
+  const rcEl = document.getElementById('rootCauses');
+  if (data.root_causes && data.root_causes.length) {
+    rcEl.innerHTML = `<div class="result-section-label" style="margin-bottom:8px;">Root Causes</div>` +
+      data.root_causes.map(rc => `<div class="rc-item"><span class="rc-bullet">▸</span>${rc}</div>`).join('');
+  }
+
+  const sc = document.getElementById('rsteps');
+  sc.innerHTML = '';
+  (data.action_plan || []).forEach((s, i) => {
+    sc.innerHTML += `
+      <div class="rstep">
+        <div class="rsn">${i + 1}</div>
+        <div style="flex:1;">
+          <div class="step-priority ${STEP_CSS[i]||'sp-build'}">${s.priority} · ${s.timeline}</div>
+          <div class="rst">${s.title}</div>
+          <div class="rsb">${s.body}</div>
+          ${s.success_metric ? `<div class="step-metric">✓ &nbsp;${s.success_metric}</div>` : ''}
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('rarct').textContent  = data.arc?.text    || '';
+  document.getElementById('rarctl').textContent = data.arc?.tagline || '';
+
+  renderSnapshotCard();
+  document.getElementById('re-result').style.display = 'block';
+  document.getElementById('cardBadge').textContent   = 'Results ready';
+  lucide.createIcons();
+  initTracker(data.action_plan || []);
+  setTimeout(() => { document.getElementById('re-result').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
+}
+
+/* ─── ARC GAUGE ANIMATION ─── */
+function animateGauge(score) {
+  const fullLen = 282.74; // π × 90
+  const offset  = fullLen * (1 - score / 100);
+  const color   = score < 40 ? '#ef4444' : score < 70 ? '#f59e0b' : '#22c55e';
+  const level   = score < 40 ? 'CRITICAL' : score < 70 ? 'DEVELOPING' : 'STRONG';
+  setTimeout(() => {
+    const arc = document.getElementById('gaugeArcPath');
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke = color;
+    document.getElementById('gaugeScoreText').textContent = score;
+    const lvl = document.getElementById('gaugeLevelText');
+    lvl.textContent = level;
+    lvl.setAttribute('fill', color);
+  }, 120);
+}
+
+/* ─── GOOGLE SNAPSHOT CARD ─── */
+function renderSnapshotCard() {
+  const area = document.getElementById('re-snap-area');
+  if (!area) return;
+
+  // Not a marketing audit — hide area
+  if (selectedCategory?.label !== 'Marketing Audit') { area.innerHTML = ''; return; }
+
+  // No data yet / lookup was skipped
+  if (!placesData && !communityResults) { area.innerHTML = ''; return; }
+
+  /* ── Not found on Google ── */
+  if (placesData && !placesData.found) {
+    area.innerHTML = `
+      <div class="snap-not-found">
+        <div style="font-weight:700;color:#ef4444;font-size:.85rem;margin-bottom:4px;">⚠ Not Found on Google Maps</div>
+        <div style="font-size:.78rem;color:#9f8aae;line-height:1.6;">We searched for <strong style="color:#c4b5d4;">${answers[0]}</strong> in <strong style="color:#c4b5d4;">${answers[1]}</strong> and couldn't find it on Google Maps. This is a critical issue — most guests search before they visit. Claiming and optimizing your Google Business Profile is Step 1.</div>
+      </div>`;
+    return;
+  }
+
+  /* ── Found — build stat grid ── */
+  const pd = placesData || {};
+
+  // Rating
+  const rating = pd.rating != null ? pd.rating.toFixed(1) : null;
+  const ratingClass = rating >= 4.5 ? 'sp-good' : rating >= 4.0 ? 'sp-warn' : 'sp-bad';
+  const ratingIcon  = rating >= 4.5 ? '★' : rating >= 4.0 ? '★' : '★';
+
+  // Review count
+  const reviews = pd.reviewCount != null ? pd.reviewCount.toLocaleString() : null;
+  const reviewClass = pd.reviewCount >= 200 ? 'sp-good' : pd.reviewCount >= 50 ? 'sp-warn' : 'sp-bad';
+
+  // Website
+  const wsClass = pd.hasWebsite ? 'sp-good' : 'sp-bad';
+  const wsVal   = pd.hasWebsite ? '✓ Listed' : '✗ Missing';
+
+  // Hours
+  const hrClass = pd.hasHours ? 'sp-good' : 'sp-warn';
+  const hrVal   = pd.hasHours ? '✓ Posted' : '✗ Not set';
+
+  const statsHtml = `
+    <div class="snap-grid">
+      ${rating ? `<div class="snap-stat ${ratingClass}">
+        <div class="snap-stat-val">${ratingIcon} ${rating}</div>
+        <div class="snap-stat-lbl">Google Rating</div>
+      </div>` : ''}
+      ${reviews ? `<div class="snap-stat ${reviewClass}">
+        <div class="snap-stat-val">${reviews}</div>
+        <div class="snap-stat-lbl">Total Reviews</div>
+      </div>` : ''}
+      <div class="snap-stat ${wsClass}">
+        <div class="snap-stat-val" style="font-size:1rem;">${wsVal}</div>
+        <div class="snap-stat-lbl">Website on Google</div>
+      </div>
+      <div class="snap-stat ${hrClass}">
+        <div class="snap-stat-val" style="font-size:1rem;">${hrVal}</div>
+        <div class="snap-stat-lbl">Hours Posted</div>
+      </div>
+    </div>`;
+
+  // Community / school search results
+  let commHtml = '';
+  if (communityResults && communityResults.length > 0) {
+    const items = communityResults.slice(0, 3).map(r =>
+      `<div class="snap-comm-item"><span class="snap-comm-dot"></span><span>${r.title}</span></div>`
+    ).join('');
+    commHtml = `
+      <div class="snap-community">
+        <div class="snap-comm-lbl">Community &amp; Partnership Mentions</div>
+        ${items}
+      </div>`;
+  } else if (communityResults && communityResults.length === 0) {
+    commHtml = `
+      <div class="snap-community">
+        <div class="snap-comm-lbl">Community &amp; Partnership Mentions</div>
+        <div class="snap-comm-item"><span class="snap-comm-dot" style="background:#4a3060;"></span><span style="color:#5a4870;">No school, fundraiser, or partnership mentions found online — a significant local marketing opportunity.</span></div>
+      </div>`;
+  }
+
+  area.innerHTML = `
+    <div class="snap-card">
+      <div class="snap-hdr">
+        <div class="snap-g-logo">G</div>
+        <div>
+          <div class="snap-name">${pd.name || answers[0]} — Google Snapshot</div>
+          ${pd.address ? `<div class="snap-addr">${pd.address}</div>` : ''}
+        </div>
+      </div>
+      ${statsHtml}
+      ${commHtml}
+    </div>`;
+}
+
+/* ─── TRACKER ─── */
+function saveTracker() { try { localStorage.setItem(trackerKey, JSON.stringify(trackerState)); } catch(e) {} }
+function loadTracker() { try { return JSON.parse(localStorage.getItem(trackerKey)) || null; } catch(e) { return null; } }
+
+function initTracker(steps) {
+  trackerKey = 're_' + btoa((answers[0]||'').slice(0,10) + (answers[4]||'').slice(0,10)).slice(0,16);
+  const saved = loadTracker();
+  trackerState = saved || {
+    steps: steps.map(s => ({ title:s.title, checks:[false,false,false,false], notes:'', startedAt:null })),
+    created: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+  };
+  steps.forEach((s,i) => { if (trackerState.steps[i]) trackerState.steps[i].title = s.title; });
+
+  const CHECK_LABELS = ['Written it down & committed','Started implementing','Running consistently','Built into operations'];
+  const TAB_META = [
+    { pr:'Do This Week', tl:'Days 1–7',  cs:'sp-high'  },
+    { pr:'This Month',   tl:'Days 8–30', cs:'sp-med'   },
+    { pr:'90 Days',      tl:'Days 30–90',cs:'sp-build' }
+  ];
+
+  document.getElementById('trackerPanels').innerHTML = steps.map((s, i) => {
+    const ts = trackerState.steps[i] || { checks:[false,false,false,false], notes:'', startedAt:null };
+    const m  = TAB_META[i] || TAB_META[2];
+    const checks = CHECK_LABELS.map((lbl,ci) => `
+      <label class="tcheck">
+        <input type="checkbox" ${ts.checks[ci]?'checked':''} onchange="handleCheck(${i},${ci},this.checked)">
+        <span>${lbl}</span>
+      </label>`).join('');
+    return `<div class="tracker-panel ${i===0?'active':''}" id="tpanel${i}">
+      <div class="tp-header">
+        <div class="step-priority ${m.cs}">${m.pr} · ${m.tl}</div>
+        <div class="rst" style="margin-top:6px;">${s.title}</div>
+        <div class="tp-body">${s.body}</div>
+        ${s.success_metric ? `<div class="tp-metric">✓ &nbsp;${s.success_metric}</div>` : ''}
+      </div>
+      <div class="tracker-checklist">${checks}</div>
+      <div style="margin-top:16px;">
+        <div class="tnotes-label">Notes — what I tried, what broke, what worked</div>
+        <textarea class="tnotes-ta" placeholder="Start writing…" oninput="handleNotes(${i},this.value)">${ts.notes||''}</textarea>
+      </div>
+      <div class="tdate-row">
+        <span class="tdate-stamp ${ts.startedAt?'active':''}" id="tstamp${i}">${ts.startedAt?'Started '+ts.startedAt:'Not started yet'}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('trackerSection').style.display = 'block';
+  updateTrackerProgress();
+  lucide.createIcons();
+}
+
+function handleCheck(si, ci, val) {
+  trackerState.steps[si].checks[ci] = val;
+  if (val && !trackerState.steps[si].startedAt) {
+    trackerState.steps[si].startedAt = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const stamp = document.getElementById('tstamp'+si);
+    if (stamp) { stamp.textContent = 'Started '+trackerState.steps[si].startedAt; stamp.classList.add('active'); }
+  }
+  saveTracker(); updateTrackerProgress();
+}
+function handleNotes(si, val) { trackerState.steps[si].notes = val; saveTracker(); }
+function updateTrackerProgress() {
+  const allChecks = trackerState.steps.flatMap(s => s.checks);
+  const done = allChecks.filter(Boolean).length;
+  const total = allChecks.length;
+  const pct = Math.round((done / total) * 100);
+  const circ = 2 * Math.PI * 18;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressRingFill').style.strokeDashoffset = circ * (1 - pct / 100);
+  document.getElementById('trackerDoneCount').textContent = done;
+}
+function showTrackerTab(i) {
+  document.querySelectorAll('.tracker-tab').forEach((t,j)   => t.classList.toggle('active', i===j));
+  document.querySelectorAll('.tracker-panel').forEach((p,j) => p.classList.toggle('active', i===j));
+}
+
+/* ─── DIG DEEPER ─── */
+function startDig() {
+  document.getElementById('digDeepWrap').style.display = 'none';
+  document.getElementById('gateBox').style.display     = 'none';
+  document.getElementById('re-result').querySelector('.rreset').style.display = 'none';
+  deepCurrent = 0; deepAnswers.fill('');
+  document.getElementById('re-deep-quiz').style.display = 'block';
+  renderDeepStep();
+  document.getElementById('re-deep-quiz').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function getDeepQs() {
+  const catKey = Object.keys(CATEGORIES).find(k => CATEGORIES[k] === selectedCategory) || 'operations';
+  const dqs = selectedCategory?.deepQuestions;
+  if (!dqs) return CATEGORIES.operations.deepQuestions['default'];
+  // For operations, try to match by first answer, fall back to default
+  if (catKey === 'operations') {
+    return dqs[answers[0]] || dqs['default'] || Object.values(dqs)[0];
+  }
+  return dqs['default'] || Object.values(dqs)[0];
+}
+
+function renderDeepStep() {
+  const dqs = getDeepQs();
+  const q   = dqs[deepCurrent];
+  const saved = deepAnswers[deepCurrent];
+  const isOpt = q.opts.includes(saved);
+  document.getElementById('deep-q-label').textContent = `Deeper Question ${deepCurrent + 1} of 3`;
+  const optsHtml = q.opts.map(o =>
+    `<button class="opt-btn${saved===o?' sel':''}" data-val="${o.replace(/"/g,'&quot;')}" onclick="selectDeepOpt(this)">${o}</button>`
+  ).join('');
+  document.getElementById('re-deep-step-content').innerHTML = `
+    <div class="q-block">
+      <div class="q-text">${q.q}</div>
+      <div class="opts-grid" id="deep-opts-wrap">${optsHtml}</div>
+      <div class="or-divider">or write your own</div>
+      <textarea class="q-textarea" id="deep-ta" placeholder="${q.ph}">${isOpt?'':saved}</textarea>
+      <div class="nav-row">
+        ${deepCurrent > 0 ? '<button class="btn-back-card" onclick="goDeepBack()">← Back</button>' : '<span></span>'}
+        <button class="btn-next-card" onclick="goDeepNext()">${deepCurrent === 2 ? 'Get Deep Diagnosis →' : 'Next →'}</button>
+      </div>
+    </div>`;
+  document.getElementById('deep-ta').addEventListener('input', () => {
+    document.querySelectorAll('#deep-opts-wrap .opt-btn').forEach(b => b.classList.remove('sel'));
+  });
+}
+function selectDeepOpt(el) {
+  document.querySelectorAll('#deep-opts-wrap .opt-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('deep-ta').value = '';
+}
+function getDeepAnswer() {
+  const sel = document.querySelector('#deep-opts-wrap .opt-btn.sel');
+  return sel ? sel.dataset.val : document.getElementById('deep-ta').value.trim();
+}
+function goDeepNext() {
+  const ans = getDeepAnswer();
+  if (!ans) {
+    const ta = document.getElementById('deep-ta');
+    ta.style.borderColor = '#7c3aed'; ta.focus();
+    setTimeout(() => { ta.style.borderColor = '#2d1a4a'; }, 1800);
+    return;
+  }
+  deepAnswers[deepCurrent] = ans;
+  if (deepCurrent < 2) { deepCurrent++; renderDeepStep(); }
+  else { runDeepAudit(); }
+}
+function goDeepBack() { deepAnswers[deepCurrent] = getDeepAnswer(); deepCurrent--; renderDeepStep(); }
+
+async function runDeepAudit() {
+  document.getElementById('re-deep-quiz').style.display = 'none';
+  document.getElementById('re-load').style.display      = 'block';
+  document.getElementById('load-main').textContent = 'Running your deep diagnosis…';
+  document.getElementById('load-sub').textContent  = 'Synthesizing all 8 answers';
+  ['lp0','lp1','lp2','lp3'].forEach(id => { document.getElementById(id).className = 'lp-item'; });
+
+  const typeNote2 = restaurantType ? `RESTAURANT CONCEPT: ${restaurantType} — calibrate all benchmarks to this model.\n\n` : '';
+  const deepMsg = typeNote2 + `Full assessment — deep dive:
+
+Initial 5 answers:
+${selectedCategory.buildMsg(answers)}
+
+3 targeted follow-up answers:
+- ${deepAnswers[0]}
+- ${deepAnswers[1]}
+- ${deepAnswers[2]}
+
+This is a second, deeper diagnosis. Be even more surgical — identify the precise root cause given all 8 answers combined. The action plan should be more targeted and specific than the initial one. Use the same JSON structure.`;
+
+  try {
+    const data = await callClaude(deepMsg, selectedCategory.system);
+    document.getElementById('re-load').style.display = 'none';
+    renderDeepResults(data);
+  } catch(err) {
+    document.getElementById('re-load').style.display = 'none';
+    document.getElementById('re-deep-result').style.display = 'block';
+    document.getElementById('deep-rrf').textContent = 'Error: ' + err.message + '. Please try again.';
+  }
+}
+
+function renderDeepResults(data) {
+  document.getElementById('deep-rrf').innerHTML =
+    `<strong style="display:block;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#f5d07a;margin-bottom:8px;">${data.headline||''}</strong>${data.reframe||''}`;
+  const stepsEl = document.getElementById('deep-steps');
+  stepsEl.innerHTML = (data.action_plan || []).map((s, i) => `
+    <div class="deep-step">
+      <div class="dsn">${i + 1}</div>
+      <div style="flex:1;">
+        <div class="step-priority ${STEP_CSS[i]||'sp-build'}">${s.priority} · ${s.timeline}</div>
+        <div class="dst">${s.title}</div>
+        <div class="dsb">${s.body}</div>
+        ${s.success_metric ? `<div class="step-timeline" style="color:#c9a84c;font-size:11px;margin-top:6px;">✓ ${s.success_metric}</div>` : ''}
+      </div>
+    </div>`).join('');
+  document.getElementById('deep-arc-text').textContent = data.arc?.text    || '';
+  document.getElementById('deep-arc-tag').textContent  = data.arc?.tagline || '';
+  document.getElementById('re-deep-result').style.display = 'block';
+  lucide.createIcons();
+}
+
+/* ─── GAUGE CHART IMAGE (Canvas → PNG for Excel) ─── */
+function generateGaugeImage(score) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 500; canvas.height = 270;
+  const ctx = canvas.getContext('2d');
+  const cx = 250, cy = 218, r = 158;
+
+  // Background
+  ctx.fillStyle = '#1e0a3c';
+  ctx.fillRect(0, 0, 500, 270);
+
+  // Zone color bands
+  ctx.lineCap = 'butt'; ctx.lineWidth = 34;
+  [[0,0.4,'rgba(239,68,68,0.22)'],[0.4,0.7,'rgba(245,158,11,0.22)'],[0.7,1,'rgba(34,197,94,0.22)']].forEach(([s,e,c]) => {
+    ctx.strokeStyle = c;
+    ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI + s*Math.PI, Math.PI + e*Math.PI, false); ctx.stroke();
+  });
+
+  // Dark track
+  ctx.strokeStyle = '#160830'; ctx.lineWidth = 28; ctx.lineCap = 'butt';
+  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 2*Math.PI, false); ctx.stroke();
+
+  // Score fill with glow
+  const color = score < 40 ? '#ef4444' : score < 70 ? '#f59e0b' : '#22c55e';
+  ctx.strokeStyle = color; ctx.lineWidth = 28; ctx.lineCap = 'round';
+  ctx.shadowColor = color; ctx.shadowBlur = 16;
+  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, Math.PI + (score/100)*Math.PI, false); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Zone separator ticks
+  ctx.strokeStyle = '#1e0a3c'; ctx.lineWidth = 4; ctx.lineCap = 'butt';
+  [0.4, 0.7].forEach(pct => {
+    const a = Math.PI + pct*Math.PI, cos = Math.cos(a), sin = Math.sin(a);
+    ctx.beginPath();
+    ctx.moveTo(cx + (r-17)*cos, cy + (r-17)*sin);
+    ctx.lineTo(cx + (r+10)*cos, cy + (r+10)*sin);
+    ctx.stroke();
+  });
+
+  // Score number
+  ctx.fillStyle = '#f5f0ff'; ctx.font = 'bold 80px Georgia,serif'; ctx.textAlign = 'center';
+  ctx.fillText(score, cx, cy - 32);
+  ctx.fillStyle = '#5a4870'; ctx.font = '17px sans-serif';
+  ctx.fillText('out of 100', cx, cy - 6);
+  const lvl = score < 40 ? 'CRITICAL' : score < 70 ? 'DEVELOPING' : 'STRONG';
+  ctx.fillStyle = color; ctx.font = 'bold 13px sans-serif';
+  ctx.fillText(lvl, cx, cy + 18);
+
+  // Zone labels at bottom
+  [['● Critical', 10, 'left', 'rgba(239,68,68,0.85)'],
+   ['● Developing', cx, 'center', 'rgba(245,158,11,0.85)'],
+   ['● Strong', 490, 'right', 'rgba(34,197,94,0.85)']].forEach(([t,x,a,c]) => {
+    ctx.fillStyle = c; ctx.font = '12px sans-serif'; ctx.textAlign = a; ctx.fillText(t, x, 262);
+  });
+
+  return canvas.toDataURL('image/png').split(',')[1];
+}
+
+/* ─── DOWNLOAD EXCEL TRACKER (ExcelJS — Branded) ─── */
+async function downloadTracker(returnBuffer = false) {
+  if (typeof ExcelJS === 'undefined') { alert('Excel library not loaded. Please refresh and try again.'); return; }
+
+  const score  = lastAuditData?.readiness_score || 0;
+  const steps  = lastAuditData?.action_plan || [];
+  const label  = selectedCategory?.label || 'Excellence Audit';
+  const today  = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const level  = score < 40 ? 'CRITICAL' : score < 70 ? 'DEVELOPING' : 'STRONG';
+  const lvlArgb   = score < 40 ? 'FFEF4444' : score < 70 ? 'FFF59E0B' : 'FF22C55E';
+  const lvlBgArgb = score < 40 ? 'FFFEF2F2' : score < 70 ? 'FFFEFCE8' : 'FFF0FDF4';
+
+  /* ── ARGB color palette ── */
+  const P = {
+    dark:'FF1E0A3C', mid:'FF6B21A8', bright:'FF7C3AED', light:'FFA855F7',
+    gold:'FFC9A84C', goldL:'FFE8C97E',
+    white:'FFFFFFFF', off:'FFFDF8FF', pale:'FFF5F3FF',
+    text:'FF111827', textM:'FF374151', gray:'FF9CA3AF',
+    red:'FFDC2626',  redBg:'FFFEE2E2',  redPale:'FFFEF2F2',
+    amb:'FFD97706',  ambBg:'FFFEF3C7',  ambPale:'FFFEFCE8',
+  };
+
+  /* ── Style helpers ── */
+  const fill = argb => ({ type:'pattern', pattern:'solid', fgColor:{argb} });
+  const fnt  = (argb, sz=11, bold=false) => ({ name:'Calibri', color:{argb}, size:sz, bold });
+  const aln  = (h='left', v='middle', wrap=false) => ({ horizontal:h, vertical:v, wrapText:wrap });
+
+  function sc(ws, addr, val, bgArgb, fgArgb, sz=11, bold=false, h='left', v='middle', wrap=false) {
+    const c = ws.getCell(addr);
+    c.value = val;
+    if (bgArgb) c.fill = fill(bgArgb);
+    c.font      = fnt(fgArgb || P.text, sz, bold);
+    c.alignment = aln(h, v, wrap);
+    return c;
+  }
+
+  function brandHdr(ws, sub) {
+    ws.mergeCells('A1:H1'); ws.getRow(1).height = 42;
+    const h1 = ws.getCell('A1');
+    h1.value = '  RESTAURANT EXCELLENCE'; h1.fill = fill(P.dark);
+    h1.font  = fnt(P.gold, 18, true); h1.alignment = aln('left','middle');
+
+    ws.mergeCells('A2:H2'); ws.getRow(2).height = 24;
+    const h2 = ws.getCell('A2');
+    h2.value = '  ' + sub; h2.fill = fill(P.mid);
+    h2.font  = fnt(P.white, 11); h2.alignment = aln('left','middle');
+
+    ws.mergeCells('A3:H3'); ws.getRow(3).height = 6;
+    ws.getCell('A3').fill = fill(P.dark);
+  }
+
+  /* ── Create workbook ── */
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'Restaurant Excellence'; wb.created = new Date();
+
+  const gaugeB64 = generateGaugeImage(score);
+  const gaugeId  = wb.addImage({ base64: gaugeB64, extension: 'png' });
+
+  /* ════════════════════════════════════════
+     SHEET 1 — DASHBOARD
+  ════════════════════════════════════════ */
+  const s1 = wb.addWorksheet('Dashboard', { properties:{ tabColor:{argb:P.mid} } });
+  s1.columns = [{width:1},{width:20},{width:24},{width:18},{width:16},{width:14},{width:16},{width:1}];
+  brandHdr(s1, label + ' — ' + today);
+
+  let r = 4;
+
+  // Info block
+  const infoRows = [
+    ['Restaurant Type:', restaurantType || '—'],
+    ['Audit Category:', label],
+    ...(selectedCategory?.label==='Marketing Audit' && answers[0] ? [['Restaurant:', answers[0] + (answers[1]?' · '+answers[1]:'')]] : []),
+    ['Date Generated:', today],
+  ];
+  infoRows.forEach(([lbl, val]) => {
+    s1.getRow(r).height = 20;
+    s1.mergeCells(`B${r}:C${r}`); s1.mergeCells(`D${r}:H${r}`);
+    sc(s1, `B${r}`, lbl, P.pale, P.bright, 9, true);
+    sc(s1, `D${r}`, val, P.pale, P.text, 11);
+    r++;
+  });
+  r++;
+
+  // Score box
+  s1.mergeCells(`B${r}:H${r+1}`);
+  s1.getRow(r).height = 34; s1.getRow(r+1).height = 34;
+  const scoreCell = s1.getCell(`B${r}`);
+  scoreCell.value     = score + ' / 100  —  ' + level;
+  scoreCell.fill      = fill(lvlBgArgb);
+  scoreCell.font      = fnt(lvlArgb, 28, true);
+  scoreCell.alignment = aln('center', 'middle');
+  r += 3;
+
+  // Gauge image
+  s1.addImage(gaugeId, { tl:{ col:1, row:r-1 }, ext:{ width:390, height:210 } });
+  r += 12;
+
+  // Headline
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 22;
+  sc(s1, `B${r}`, '  HEADLINE', P.dark, P.gold, 9, true, 'left', 'middle'); r++;
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 32;
+  sc(s1, `B${r}`, lastAuditData?.headline||'', P.off, P.text, 12, true, 'left', 'middle', true); r++;
+
+  // Diagnosis
+  r++;
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 22;
+  sc(s1, `B${r}`, '  DIAGNOSIS', P.dark, P.gold, 9, true, 'left', 'middle'); r++;
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 82;
+  sc(s1, `B${r}`, lastAuditData?.reframe||'', P.pale, P.textM, 10, false, 'left', 'top', true); r++;
+
+  // Root causes
+  r++;
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 22;
+  sc(s1, `B${r}`, '  ROOT CAUSES', P.dark, P.gold, 9, true, 'left', 'middle'); r++;
+  (lastAuditData?.root_causes || []).forEach((rc, i) => {
+    s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 26;
+    sc(s1, `B${r}`, '  ▸  ' + rc, i%2 ? P.pale : P.off, P.textM, 10, false, 'left', 'middle', true); r++;
+  });
+
+  // Benchmarks
+  r++;
+  s1.mergeCells(`B${r}:H${r}`); s1.getRow(r).height = 22;
+  sc(s1, `B${r}`, '  BENCHMARKS', P.dark, P.gold, 9, true, 'left', 'middle'); r++;
+  s1.getRow(r).height = 18;
+  sc(s1, `B${r}`, 'STAT',    P.bright, P.white, 8, true, 'center');
+  s1.mergeCells(`C${r}:G${r}`);
+  sc(s1, `C${r}`, 'INSIGHT', P.bright, P.white, 8, true);
+  sc(s1, `H${r}`, 'SOURCE',  P.bright, P.white, 8, true); r++;
+  (lastAuditData?.benchmarks || []).forEach((b, i) => {
+    s1.getRow(r).height = 28;
+    const bg = i%2 ? P.pale : P.off;
+    sc(s1, `B${r}`, b.stat||'', bg, P.bright, 13, true, 'center', 'middle');
+    s1.mergeCells(`C${r}:G${r}`);
+    sc(s1, `C${r}`, b.label||'', bg, P.textM, 10, false, 'left', 'middle', true);
+    sc(s1, `H${r}`, b.source||'', bg, P.gray, 8, false, 'left', 'middle', true); r++;
+  });
+
+  /* ════════════════════════════════════════
+     SHEET 2 — ACTION PLAN
+  ════════════════════════════════════════ */
+  const s2 = wb.addWorksheet('Action Plan', { properties:{ tabColor:{argb:P.bright} } });
+  s2.columns = [{width:1},{width:4},{width:28},{width:48},{width:26},{width:16},{width:16},{width:1}];
+  brandHdr(s2, '90-Day Action Plan — Track Your Progress');
+
+  const stepsTheme = [
+    { hdr:'DO THIS WEEK · Days 1–7',       hBg:P.redBg,  hFg:P.red,    bg:P.redPale, fg:P.red    },
+    { hdr:'BUILD THIS MONTH · Days 8–30',  hBg:P.ambBg,  hFg:P.amb,    bg:P.ambPale, fg:P.amb    },
+    { hdr:'BUILD TO SCALE · Days 30–90',   hBg:P.pale,   hFg:P.bright, bg:P.off,     fg:P.bright },
+  ];
+
+  // Column headers row
+  let r2 = 4;
+  s2.getRow(r2).height = 18;
+  sc(s2, `B${r2}`, '#',               P.dark, P.gold, 8, true, 'center');
+  sc(s2, `C${r2}`, 'ACTION ITEM',     P.dark, P.gold, 8, true);
+  sc(s2, `D${r2}`, 'WHAT TO DO',      P.dark, P.gold, 8, true);
+  sc(s2, `E${r2}`, 'SUCCESS METRIC',  P.dark, P.gold, 8, true);
+  sc(s2, `F${r2}`, 'STATUS',          P.dark, P.gold, 8, true, 'center');
+  sc(s2, `G${r2}`, 'DATE DONE',       P.dark, P.gold, 8, true, 'center');
+  r2++;
+
+  steps.forEach((step, i) => {
+    const t = stepsTheme[i] || stepsTheme[2];
+
+    // Step header bar
+    s2.mergeCells(`B${r2}:H${r2}`); s2.getRow(r2).height = 24;
+    sc(s2, `B${r2}`, '  ' + t.hdr, t.hBg, t.hFg, 11, true, 'left', 'middle'); r2++;
+
+    // Main step row
+    s2.getRow(r2).height = 90;
+    sc(s2, `B${r2}`, String(i+1),     t.bg, t.fg,  22, true, 'center', 'middle');
+    sc(s2, `C${r2}`, step.title||'',  t.bg, P.text, 12, true, 'left',  'top',    true);
+    sc(s2, `D${r2}`, step.body||'',   t.bg, P.textM,10, false,'left',  'top',    true);
+    sc(s2, `E${r2}`, step.success_metric||'', t.bg, t.fg, 10, false,'left','top',true);
+    sc(s2, `F${r2}`, 'Not Started',   P.off, P.gray,10, false,'center','middle');
+    sc(s2, `G${r2}`, '',              P.off, P.gray,10, false,'center','middle');
+    r2++;
+
+    // Implementation checklist
+    ['☐  Written it down & committed','☐  Started implementing','☐  Running consistently','☐  Built into operations'].forEach((lbl, ci) => {
+      s2.getRow(r2).height = 17;
+      sc(s2, `B${r2}`, '', ci%2 ? P.pale : P.off, P.text, 10);
+      s2.mergeCells(`C${r2}:H${r2}`);
+      sc(s2, `C${r2}`, lbl, ci%2 ? P.pale : P.off, P.textM, 10, false, 'left', 'middle'); r2++;
+    });
+
+    // Notes bar
+    s2.mergeCells(`B${r2}:C${r2}`); s2.mergeCells(`D${r2}:H${r2}`);
+    s2.getRow(r2).height = 20;
+    sc(s2, `B${r2}`, 'Notes:', P.pale, t.fg, 9, true, 'left', 'middle');
+    sc(s2, `D${r2}`, '', P.pale, P.textM, 10);
+    r2++;
+
+    // Spacer
+    s2.getRow(r2).height = 10; r2++;
+  });
+
+  /* ════════════════════════════════════════
+     SHEET 3 — 12-WEEK LOG
+  ════════════════════════════════════════ */
+  const s3 = wb.addWorksheet('Weekly Log', { properties:{ tabColor:{argb:P.gold} } });
+  s3.columns = [{width:1},{width:7},{width:14},{width:30},{width:30},{width:30},{width:24},{width:1}];
+  brandHdr(s3, '12-Week Progress Log');
+
+  let r3 = 4;
+  s3.getRow(r3).height = 20;
+  [['B','WK'],['C','DATES'],['D','WINS THIS WEEK'],['E','WHAT SLIPPED'],['F','NEXT WEEK PRIORITY'],['G','NOTES']].forEach(([col,lbl]) => {
+    sc(s3, `${col}${r3}`, lbl, P.dark, P.gold, 8, true, 'center');
+  }); r3++;
+
+  for (let w = 1; w <= 12; w++) {
+    s3.getRow(r3).height = 36;
+    const bg = w%2 ? P.off : P.pale;
+    sc(s3, `B${r3}`, 'Wk ' + w, bg, P.bright, 10, true, 'center', 'middle');
+    ['C','D','E','F','G'].forEach(col => sc(s3, `${col}${r3}`, '', bg, P.textM, 10, false, 'left', 'top', true));
+    r3++;
+  }
+
+  // Footer tip
+  s3.mergeCells(`B${r3}:G${r3}`); s3.getRow(r3).height = 26;
+  sc(s3, `B${r3}`, '  ✦  Review this weekly. Even 5 minutes of honest reflection compounds fast.', P.pale, P.bright, 10, false, 'left', 'middle', true);
+
+  /* ════════════════════════════════════════
+     SHEET 4 — MONTHLY METRICS
+  ════════════════════════════════════════ */
+  const s4 = wb.addWorksheet('Monthly Metrics', { properties:{ tabColor:{argb:P.light} } });
+  s4.columns = [{width:1},{width:24},{width:14},{width:12},{width:12},{width:12},{width:18},{width:26},{width:1}];
+  brandHdr(s4, 'Monthly Performance Metrics');
+
+  let r4 = 4;
+  s4.getRow(r4).height = 20;
+  [['B','METRIC'],['C','NOW (BASELINE)'],['D','MONTH 1'],['E','MONTH 2'],['F','MONTH 3'],['G','TARGET'],['H','CONTEXT / NOTES']].forEach(([col,lbl]) => {
+    sc(s4, `${col}${r4}`, lbl, P.dark, P.gold, 8, true, 'center');
+  }); r4++;
+
+  [
+    ['Revenue ($)',           '', '', '', '', 'Your best month goal',          ''],
+    ['Food Cost %',           '', '', '', '', '28–32% (casual) / 25–30% (QSR)',''],
+    ['Labor Cost %',          '', '', '', '', '25–35% depending on concept',   ''],
+    ['Prime Cost %',          '', '', '', '', 'Target: under 60%',             ''],
+    ['Net Profit %',          '', '', '', '', '3–6% avg · 10–15% excellent',   ''],
+    ['Avg Check ($)',         '', '', '', '', 'Track vs. prior period',         ''],
+    ['Google Rating',         '', '', '', '', '4.5+ stars is strong',          ''],
+    ['Google Review Count',   '', '', '', '', '50+ solid · 100+ strong',       ''],
+    ['Yelp Rating',           '', '', '', '', '4.0+ is solid',                 ''],
+    ['New Guests (est.)',      '', '', '', '', 'Track via source tagging',      ''],
+    ['Return Rate (est.)',     '', '', '', '', '30%+ is strong',                ''],
+    ['Staff Turnover %',      '', '', '', '', 'Under 60% = below industry avg',''],
+    ['Training Complete %',   '', '', '', '', 'Target: 100% certified staff',  ''],
+  ].forEach((row, i) => {
+    s4.getRow(r4).height = 24;
+    const bg = i%2 ? P.pale : P.off;
+    const [name, b, m1, m2, m3, target, ctx] = row;
+    sc(s4, `B${r4}`, name,   bg, P.text,  11, true,  'left',   'middle');
+    sc(s4, `C${r4}`, b,      bg, P.textM, 11, false, 'center', 'middle');
+    sc(s4, `D${r4}`, m1,     bg, P.textM, 11, false, 'center', 'middle');
+    sc(s4, `E${r4}`, m2,     bg, P.textM, 11, false, 'center', 'middle');
+    sc(s4, `F${r4}`, m3,     bg, P.textM, 11, false, 'center', 'middle');
+    sc(s4, `G${r4}`, target, bg, P.bright, 9, false, 'left',   'middle', true);
+    sc(s4, `H${r4}`, ctx,    bg, P.gray,   9, false, 'left',   'middle', true);
+    r4++;
+  });
+
+  // Footer note
+  r4++;
+  s4.mergeCells(`B${r4}:H${r4}`); s4.getRow(r4).height = 30;
+  sc(s4, `B${r4}`, '  ✦  Fill in your Baseline numbers first. Update monthly. Compare Month 3 vs Baseline to see real progress — focus on trends, not snapshots.', P.pale, P.bright, 10, false, 'left', 'middle', true);
+
+  /* ── Export ── */
+  const buf      = await wb.xlsx.writeBuffer();
+  const fileName = label.toLowerCase().replace(/\s+/g,'-') + '-tracker-' + new Date().toISOString().slice(0,10) + '.xlsx';
+
+  if (returnBuffer) return { buf, fileName };  // caller handles delivery
+
+  const blob = new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = fileName;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ─── (legacy HTML download removed) ─── */
+function _downloadTracker_html_legacy() {
+  const label  = selectedCategory?.label || 'Excellence';
+  const goal   = answers[4] || 'Your Goal';
+  const steps  = lastAuditData?.action_plan || [];
+  const today  = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const d30    = new Date(Date.now()+30*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const d60    = new Date(Date.now()+60*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const d90    = new Date(Date.now()+90*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const stepMeta = [
+    {pr:'Do This Week',   tl:'Days 1-7',  col:'#dc2626',bg:'#fef2f2',bc:'#fecaca'},
+    {pr:'Build This Month',tl:'Days 8-30', col:'#ea580c',bg:'#fff7ed',bc:'#fed7aa'},
+    {pr:'Build to Scale', tl:'Days 30-90',col:'#7c3aed',bg:'#f5f3ff',bc:'#ddd6fe'}
+  ];
+  const checks = ['Written it down & committed','Started implementing','Running consistently','Built into operations'];
+  const stepsHTML = steps.map((s,i) => {
+    const m  = stepMeta[i]||stepMeta[2];
+    const ts = trackerState?.steps?.[i];
+    return `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 28px;margin-bottom:16px;">
+      <div style="display:flex;gap:16px;">
+        <div style="width:36px;height:36px;min-width:36px;border-radius:50%;background:#1e0a3c;color:#a855f7;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;">${i+1}</div>
+        <div style="flex:1;">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;background:${m.bg};color:${m.col};border:1px solid ${m.bc};">${m.pr} · ${m.tl}</span>
+          <div style="font-size:15px;font-weight:700;color:#111;margin:8px 0 6px;">${s.title}</div>
+          <p style="font-size:13px;color:#4b5563;line-height:1.75;margin:0 0 10px;">${s.body}</p>
+          ${s.success_metric?`<div style="font-size:12px;color:#7c3aed;padding:7px 11px;background:#f5f3ff;border-radius:6px;margin-bottom:12px;">✓ ${s.success_metric}</div>`:''}
+          ${checks.map((lbl,ci)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;"><input type="checkbox" ${ts?.checks?.[ci]?'checked':''} style="width:14px;height:14px;accent-color:#7c3aed;"><span style="font-size:13px;color:${ts?.checks?.[ci]?'#9ca3af':'#374151'};${ts?.checks?.[ci]?'text-decoration:line-through;':''}">${lbl}</span></div>`).join('')}
+          <div style="margin-top:12px;"><div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:4px;">Notes:</div><div style="min-height:48px;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;color:${ts?.notes?'#374151':'#9ca3af'};">${ts?.notes||'—'}</div></div>
+          ${ts?.startedAt?`<div style="font-size:11px;color:#c9a84c;margin-top:8px;">Started: ${ts.startedAt}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${label} Action Plan</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9fafb;-webkit-font-smoothing:antialiased}@media print{body{background:#fff}.no-print{display:none!important}}</style></head><body>
+<div style="max-width:780px;margin:0 auto;padding:32px 24px;">
+  <div style="background:linear-gradient(135deg,#1e0a3c,#0d0618);border-radius:16px;padding:32px 36px;margin-bottom:28px;color:#fff;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#a855f7;margin-bottom:10px;">Restaurant Excellence</div>
+    <div style="font-family:Georgia,serif;font-size:2rem;font-weight:700;line-height:1.1;margin-bottom:8px;">${label} — Action Plan</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px;">Generated ${today}</div>
+    <div style="background:rgba(255,255,255,.07);border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">12-Month Goal</div><div style="font-size:13px;font-weight:600;">${goal}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px;">
+    <div style="background:#fff;border:2px solid #fecaca;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#dc2626;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Do This Week</div><div style="font-size:12px;color:#6b7280;">Now → ${d30}</div></div>
+    <div style="background:#fff;border:2px solid #fed7aa;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#ea580c;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Build This Month</div><div style="font-size:12px;color:#6b7280;">${d30} → ${d60}</div></div>
+    <div style="background:#fff;border:2px solid #ddd6fe;border-radius:10px;padding:14px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#7c3aed;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Build to Scale</div><div style="font-size:12px;color:#6b7280;">${d60} → ${d90}</div></div>
+  </div>
+  ${stepsHTML}
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 28px;margin-bottom:24px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#7c3aed;margin-bottom:16px;">Weekly Check-In Log</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="border-bottom:2px solid #e5e7eb;"><th style="text-align:left;padding:8px 10px;color:#374151;">Week</th><th style="text-align:left;padding:8px 10px;color:#374151;">What I did</th><th style="text-align:left;padding:8px 10px;color:#374151;">What slipped</th><th style="text-align:left;padding:8px 10px;color:#374151;">Next focus</th></tr></thead>
+      <tbody>${Array.from({length:12},(_,i)=>`<tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:12px 10px;color:#9ca3af;">Wk ${i+1}</td><td style="padding:12px 10px;"></td><td style="padding:12px 10px;"></td><td style="padding:12px 10px;"></td></tr>`).join('')}</tbody>
+    </table>
+  </div>
+  <div style="text-align:center;padding:20px 0;border-top:1px solid #e5e7eb;">
+    <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:#1e0a3c;margin-bottom:4px;">Restaurant<span style="color:#c9a84c;">Excellence</span></div>
+    <div style="font-size:11px;color:#9ca3af;margin-bottom:12px;">Generated by the Excellence Audit</div>
+    <button onclick="window.print()" class="no-print" style="background:#1e0a3c;color:#fff;border:none;border-radius:6px;padding:9px 20px;font-size:12px;font-weight:600;cursor:pointer;">Print This Plan</button>
+  </div>
+</div></body></html>`;
+
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${(selectedCategory?.label||'excellence').toLowerCase().replace(/\s+/g,'-')}-action-plan.html`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+/* ─── HELPER: ArrayBuffer → base64 ─── */
+function bufToBase64(buf) {
+  let binary = '';
+  const bytes = new Uint8Array(buf);
+  for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+/* ─── EMAIL GATE — shared logic ─── */
+async function handleDlShared(nameId, emailId, btnId, sucId) {
+  const n   = document.getElementById(nameId).value.trim();
+  const e   = document.getElementById(emailId).value.trim();
+  const btn = document.getElementById(btnId);
+
+  if (!n || !e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+    if (!n) document.getElementById(nameId).style.borderColor  = '#7c3aed';
+    if (!e || !e.includes('@')) document.getElementById(emailId).style.borderColor = '#7c3aed';
+    setTimeout(() => {
+      document.getElementById(nameId).style.borderColor  = '';
+      document.getElementById(emailId).style.borderColor = '';
+    }, 2400);
+    return;
+  }
+
+  // Loading state
+  const origLabel = btn.textContent;
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;"></span>Sending…';
+
+  try {
+    // 1. Build the Excel workbook and get back the raw buffer
+    const { buf, fileName } = await downloadTracker(true);
+    const fileBase64 = bufToBase64(buf);
+
+    // 2. Send to worker → emails the file to the user + adds to newsletter + notifies pierce
+    const resp = await fetch(RE_WORKER_URL + '/send-audit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        name:      n,
+        email:     e,
+        category:  selectedCategory?.label  || 'Excellence Audit',
+        score:     lastAuditData?.readiness_score || 0,
+        headline:  lastAuditData?.headline   || '',
+        fileName,
+        fileBase64,
+      }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || 'Send failed');
+
+    // 3. Also trigger a local download as a bonus
+    const blob = new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = fileName;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // 4. Show success
+    btn.style.display = 'none';
+    document.getElementById(sucId).style.display = 'block';
+
+  } catch(err) {
+    console.error('Send audit error:', err.message);
+    btn.disabled = false;
+    btn.textContent = origLabel;
+    // Still show success — don't block them if network failed
+    btn.style.display = 'none';
+    document.getElementById(sucId).style.display = 'block';
+    // Trigger local download as fallback
+    downloadTracker().catch(() => {});
+  }
+}
+
+function handleDl()  { handleDlShared('rname',  'remail',  'rdl-btn',  'rsuc');  }
+function handleDl2() { handleDlShared('rname2', 'remail2', 'rdl-btn2', 'rsuc2'); }
+
+/* ─── RESET ─── */
+function resetAll() {
+  current = 0; answers.fill('');
+  deepCurrent = 0; deepAnswers.fill('');
+  lastAuditData = null; trackerState = null; selectedCategory = null; restaurantType = null;
+  placesData = null; communityResults = null; placesLookupPromise = null;
+  const snapArea = document.getElementById('re-snap-area');
+  if (snapArea) snapArea.innerHTML = '';
+
+  ['re-result','re-deep-quiz','re-deep-result','re-load'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  const err = document.getElementById('re-error');
+  if (err) err.remove();
+
+  document.getElementById('re-quiz').style.display       = 'none';
+  document.getElementById('progWrap').style.display      = 'none';
+  document.getElementById('stepPills').style.display     = 'none';
+  document.getElementById('re-category').style.display   = 'none';
+  document.getElementById('re-rtype').style.display      = 'block';
+  document.getElementById('cardTitle').textContent        = 'The Excellence Audit';
+  document.getElementById('digDeepWrap').style.display   = 'block';
+  document.getElementById('gateBox').style.display       = 'block';
+  document.getElementById('trackerSection').style.display= 'none';
+  document.getElementById('re-result').querySelector('.rreset').style.display = 'block';
+  ['rdl-btn','rdl-btn2'].forEach(id => { document.getElementById(id).style.display = 'block'; });
+  ['rsuc','rsuc2'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  ['rname','remail','rname2','remail2'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('cardBadge').textContent = 'Free · 3–5 min';
+  // Reset SVG gauge
+  const arc = document.getElementById('gaugeArcPath');
+  if (arc) { arc.style.strokeDashoffset = '282.74'; arc.style.stroke = '#ef4444'; }
+  const gst = document.getElementById('gaugeScoreText');
+  if (gst) gst.textContent = '—';
+  const glt = document.getElementById('gaugeLevelText');
+  if (glt) { glt.textContent = '—'; glt.setAttribute('fill','#5a4870'); }
+  document.getElementById('dataPoints').innerHTML    = '';
+  document.getElementById('rrf').innerHTML           = '';
+  document.getElementById('rootCauses').innerHTML    = '';
+  document.getElementById('rsteps').innerHTML        = '';
+  document.getElementById('rarct').textContent       = '';
+  document.getElementById('rarctl').textContent      = '';
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>
